@@ -1,0 +1,641 @@
+﻿<Window x:Class="RotaCaelum.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RotaCaelum"
+        xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="720"
+        Width="1080">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition Height="250" />
+            <RowDefinition />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!--logo-->
+        <Border Margin="4,4,4,2"
+                Grid.Column="0"
+                Grid.Row="0"
+                CornerRadius="10"
+                BorderBrush="Black"
+                BorderThickness="1,1,1,1">
+            <Border.Background>
+                <ImageBrush Stretch="Uniform"
+                            ImageSource="/Artboard 1.png" />
+            </Border.Background>
+        </Border>
+
+        <!--start-->
+        <Border Grid.Row="1"
+                Grid.Column="0"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="10"
+                Margin="4,2,4,4">
+
+            <Grid Margin="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition />
+                    <RowDefinition Height="2*" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Button Content="START"
+                        Background="LIME"
+                        FontSize="16"
+                        Margin="0,0,2,0" />
+
+
+                <Grid Grid.Column="1"
+                      Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Label Content="01.01.2024"
+                           FontSize="16"
+                           Grid.Row="0"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           Padding="0,0,0,0" />
+
+                    <Label Content="00:00"
+                           FontSize="16"
+                           Grid.Row="1"
+                           VerticalContentAlignment="Center"
+                           HorizontalContentAlignment="Center"
+                           Padding="0,0,0,0" />
+
+                </Grid>
+
+                <Label Content="00:00:00"
+                       Grid.Row="1"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontSize="28" />
+
+                <Label Content="00:00:00"
+                       Grid.Row="2"
+                       Grid.Column="0"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontSize="18"
+                       Padding="0" />
+
+                <Label Content="00:00:00"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       FontSize="18"
+                       Padding="0" />
+
+                <Button Content="MANUAL DEPLOY 1"
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Background="Red"
+                        FontSize="14"
+                        Foreground="White"
+                        Margin="0,0,2,0" />
+
+                <Button Content="MANUAL DEPLOY 2"
+                        Grid.Column="1"
+                        Grid.Row="3"
+                        Background="Red"
+                        FontSize="14"
+                        Foreground="White"
+                        Margin="0,0,2,0" />
+
+                <CheckBox Content="EMERGENCY RESCUE MODE"
+                          x:Name="checkBox_EMERGENCY_RESCUE_MODE"
+                          Grid.Column="0"
+                          Grid.Row="4"
+                          IsChecked="True"
+                          VerticalAlignment="Center"
+                          Grid.ColumnSpan="2" />
+
+            </Grid>
+
+        </Border>
+
+        <!--configs-->
+        <Border Margin="4,2,4,4"
+                Padding="4"
+                Grid.Column="0"
+                Grid.Row="2"
+                Grid.RowSpan="3"
+                CornerRadius="10"
+                BorderBrush="Black"
+                BorderThickness="1,1,1,1">
+
+            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+
+                <StackPanel Margin="4"
+                            CanVerticallyScroll="True"
+                            ScrollViewer.CanContentScroll="True">
+
+
+                    <!--com port config-->
+                    <GroupBox Height="181"
+                              Header="COM Port Config"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*" />
+                                <RowDefinition Height="2*" />
+                                <RowDefinition />
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+
+
+                            <Label Padding="0,0,0,0"
+                                   Content="Com Port"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="14" />
+
+                            <Label Padding="0,0,0,0"
+                                   Content="Baud Rate"
+                                   Grid.Column="0"
+                                   Grid.Row="1"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="14" />
+
+                            <ComboBox Grid.Column="1"
+                                      Margin="5"
+                                      Grid.Row="0" />
+
+                            <ComboBox Grid.Column="1"
+                                      Margin="5"
+                                      Grid.Row="1" />
+
+                            <Button Grid.Column="3"
+                                    Grid.Row="0"
+                                    Margin="3">
+                                <Button.Background>
+                                    <ImageBrush Stretch="Uniform"
+                                                ImageSource="/refresh.png" />
+                                </Button.Background>
+                            </Button>
+
+                            <Label Grid.Column="1"
+                                   Grid.Row="2"
+                                   Padding="0"
+                                   Content="No Connection"
+                                   HorizontalContentAlignment="Right"
+                                   FontSize="9"
+                                   VerticalContentAlignment="Center"
+                                   Margin="0,0,5,0" />
+
+                            <RichTextBox Grid.Column="0"
+                                         Grid.Row="3"
+                                         IsReadOnly="True"
+                                         Grid.ColumnSpan="3" />
+
+                            <Button Grid.Column="0"
+                                    Grid.ColumnSpan="3"
+                                    Background="Lime"
+                                    Content="Open Port"
+                                    FontSize="14"
+                                    Grid.Row="4"
+                                    Margin="0,4,0,0" />
+
+
+                        </Grid>
+
+
+
+                    </GroupBox>
+
+                    <!--save data-->
+                    <GroupBox Header="Save Data"
+                              FontSize="10"
+                              Foreground="#CC000000"
+                              Height="76">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0"
+                                   Grid.Row="0"
+                                   Padding="0"
+                                   Content="Save Location"
+                                   FontSize="14"
+                                   VerticalContentAlignment="Center" />
+
+                            <TextBox Grid.Column="1"
+                                     Margin="0,4,0,4"
+                                     IsReadOnly="True"
+                                     Text="Tap to select folder"
+                                     Grid.Row="0"
+                                     MaxLines="1"
+                                     VerticalContentAlignment="Center" />
+
+                            <CheckBox Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Grid.Row="1"
+                                      Content="Don't Save Data"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center" />
+
+
+
+                        </Grid>
+
+
+                    </GroupBox>
+
+                    <!--first deploymen-->
+                    <GroupBox Header="1. Deployment"
+                              FontSize="10"
+                              Foreground="#CC000000"
+                              Height="200">
+
+
+                        <StackPanel>
+
+                            <Label Content="Sequences"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   FontSize="12"
+                                   Padding="0"
+                                   VerticalContentAlignment="Center" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="True"
+                                          FontSize="14"
+                                          Content="Pitch Angle"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          Content="Velocity"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          Content="Altitude"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="True"
+                                          FontSize="14"
+                                          Content="Apogee"
+                                          VerticalContentAlignment="Center"
+                                          Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid Margin="0,5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="1"
+                                        FontSize="14"
+                                        Height="35"
+                                        Content="Apply" />
+                            </Grid>
+                        </StackPanel>
+
+
+                    </GroupBox>
+
+                    <!--second deployment-->
+                    <GroupBox Header="2. Deployment"
+                              FontSize="10"
+                              Foreground="#CC000000"
+                              Height="170">
+
+
+                        <StackPanel>
+
+                            <Label Content="Sequences"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   FontSize="12"
+                                   Padding="0"
+                                   VerticalContentAlignment="Center" />
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          Content="Pitch Angle"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          Content="Velocity"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          IsChecked="True"
+                                          Content="Altitude"
+                                          VerticalContentAlignment="Center" />
+
+                                <TextBox Grid.Column="1"
+                                         MaxLines="1"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,4,0,4" />
+                            </Grid>
+
+
+
+                            <Grid Margin="0,5,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Content="Don't use"
+                                          Grid.Column="0"
+                                          FontSize="14"
+                                          VerticalContentAlignment="Bottom" />
+
+                                <Button Grid.Column="1"
+                                        FontSize="14"
+                                        Height="35"
+                                        Content="Apply" />
+                            </Grid>
+                        </StackPanel>
+
+
+                    </GroupBox>
+
+                    <!--settings-->
+
+                    <GroupBox Header="Settings"
+                              FontSize="10"
+                              Foreground="#CC000000"
+                              Height="83">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="2*" />
+                            </Grid.RowDefinitions>
+
+                            <RadioButton Content="ft"
+                                         Grid.Column="0"
+                                         Grid.Row="0"
+                                         FontSize="14"
+                                         VerticalContentAlignment="Center" />
+                            <RadioButton Content="m"
+                                         Grid.Column="1"
+                                         Grid.Row="0"
+                                         FontSize="14"
+                                         IsChecked="True"
+                                         VerticalContentAlignment="Center" />
+
+                            <Button Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Content="Start Simulation Mode"
+                                    Grid.Row="2"
+                                    Margin="0,4,0,0"
+                                    FontSize="12" />
+                        </Grid>
+
+
+                    </GroupBox>
+
+                </StackPanel>
+
+            </ScrollViewer>
+        </Border>
+
+
+        <!--datavisualize-->
+        <Border Grid.Column="1"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Margin="2,4,4,2"
+                BorderBrush="Black">
+
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45*" />
+                    <ColumnDefinition Width="55*" />
+                </Grid.ColumnDefinitions>
+
+                <!--map-->
+                <Border CornerRadius="10"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        Grid.RowSpan="2">
+                    <Border.Background>
+                        <ImageBrush Stretch="UniformToFill"
+                                    ImageSource="/harita.png" />
+                    </Border.Background>
+
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Margin="4,0,0,0"
+                        Padding="4"
+                        Grid.Row="0">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+
+                        <ScottPlot:WpfPlot x:Name="pressureChart"
+                                           Grid.Column="0"
+                                           Grid.Row="0" 
+                                           LeftClicked="pressureChartClicked"/>
+                        <ScottPlot:WpfPlot x:Name="altitudeChart"
+                                           Grid.Column="1"
+                                           Grid.Row="0" />
+                        <ScottPlot:WpfPlot x:Name="velocityChart"
+                                           Grid.Column="2"
+                                           Grid.Row="0" />
+                        <ScottPlot:WpfPlot x:Name="temperatureChart"
+                                           Grid.Column="0"
+                                           Grid.Row="1" />
+                        <ScottPlot:WpfPlot x:Name="gyroChart"
+                                           Grid.Column="1"
+                                           Grid.Row="1" />
+                        <ScottPlot:WpfPlot x:Name="accelChart"
+                                           Grid.Column="2"
+                                           Grid.Row="1" />
+
+
+
+                    </Grid>
+
+
+
+                </Border>
+
+                <Border BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        Margin="4,4,0,0"
+                        Padding="4"
+                        Grid.Row="1"
+                        Grid.Column="1">
+
+                    <Grid x:Name="expandedPlace">
+
+
+                    </Grid>
+
+                </Border>
+                
+
+                <!--<ScottPlot:WpfPlot x:Name="pressure"
+                                   Grid.Column="1"
+                                   Grid.Row="1"/>-->
+
+
+            </Grid>
+
+
+        </Border>
+
+        <!--telemetry-->
+        <Border Grid.Column="1"
+                Grid.Row="3"
+                Margin="2,2,4,4"
+                CornerRadius="10"
+                BorderThickness="1,1,1,1"
+                BorderBrush="Black">
+
+
+        </Border>
+
+    </Grid>
+</Window>
