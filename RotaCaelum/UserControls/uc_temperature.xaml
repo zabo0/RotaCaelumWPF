@@ -1,11 +1,10 @@
-﻿<UserControl x:Name="userControl_Pressure"
-             x:Class="RotaCaelum.UserControls.uc_pressure"
+﻿<UserControl x:Class="RotaCaelum.UserControls.uc_temperature"
+             x:Name="userControl_Temperature"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RotaCaelum.UserControls"
-             xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              xmlns:viewmodels="clr-namespace:RotaCaelum.ViewModels"
              d:DataContext="{d:DesignInstance Type=viewmodels:ViewModelTelemetry}"
@@ -14,19 +13,18 @@
     <Grid Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
 
 
 
         <!--<ScottPlot:WpfPlot x:Name="pressure"
-                           Grid.Column="0" />-->
+                        Grid.Column="0" />-->
 
         <lvc:CartesianChart DisableAnimations="True"
-                            Series="{Binding srCollectionPressure}"
+                            Series="{Binding srCollectionTemperature}"
                             x:Name="detailChart"
                             Hoverable="False"
-                            DataTooltip="{x:Null}"
                             Grid.Column="0">
             <lvc:CartesianChart.AxisY>
                 <lvc:Axis ShowLabels="False">

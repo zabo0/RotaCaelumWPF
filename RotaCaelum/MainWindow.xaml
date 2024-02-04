@@ -3,12 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RotaCaelum"
+        xmlns:local="clr-namespace:RotaCaelum.ViewModels"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+        xmlns:map="clr-namespace:MapControl;assembly=MapControl.WPF"
+        xmlns:viewmodels="clr-namespace:RotaCaelum.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ViewModelTelemetry}"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="720"
-        Width="1080">
+        WindowStartupLocation="CenterScreen"
+        MinHeight="920"
+        MinWidth="1500">
+
+    <Window.DataContext>
+        <local:ViewModelTelemetry />
+    </Window.DataContext>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80" />
@@ -34,6 +46,7 @@
             </Border.Background>
         </Border>
 
+        
         <!--start-->
         <Border Grid.Row="1"
                 Grid.Column="0"
@@ -56,9 +69,11 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Content="START"
+                        Name="button_start"
                         Background="LIME"
                         FontSize="16"
-                        Margin="0,0,2,0" />
+                        Margin="0,0,2,0"
+                        Click="StartButtonClicked" />
 
 
                 <Grid Grid.Column="1"
@@ -114,7 +129,8 @@
                         Background="Red"
                         FontSize="14"
                         Foreground="White"
-                        Margin="0,0,2,0" />
+                        Margin="0,0,2,0"
+                        Click="ManuelDeploy_1Clicked" />
 
                 <Button Content="MANUAL DEPLOY 2"
                         Grid.Column="1"
@@ -122,7 +138,8 @@
                         Background="Red"
                         FontSize="14"
                         Foreground="White"
-                        Margin="0,0,2,0" />
+                        Margin="0,0,2,0"
+                        Click="ManuelDeploy_2Clicked" />
 
                 <CheckBox Content="EMERGENCY RESCUE MODE"
                           x:Name="checkBox_EMERGENCY_RESCUE_MODE"
@@ -236,6 +253,7 @@
 
                     <!--save data-->
                     <GroupBox Header="Save Data"
+                              Name="groupBox_saveData"
                               FontSize="10"
                               Foreground="#CC000000"
                               Height="76">
@@ -281,6 +299,7 @@
 
                     <!--first deploymen-->
                     <GroupBox Header="1. Deployment"
+                              Name="groupBox_firstDeploy"
                               FontSize="10"
                               Foreground="#CC000000"
                               Height="200">
@@ -382,6 +401,7 @@
 
                     <!--second deployment-->
                     <GroupBox Header="2. Deployment"
+                              Name="groupBox_secondDeploy"
                               FontSize="10"
                               Foreground="#CC000000"
                               Height="170">
@@ -477,6 +497,7 @@
                     <!--settings-->
 
                     <GroupBox Header="Settings"
+                              Name="groupBox_settings"
                               FontSize="10"
                               Foreground="#CC000000"
                               Height="83">
@@ -542,16 +563,15 @@
                 <Border CornerRadius="10"
                         Grid.Column="0"
                         Grid.Row="0"
+                        Padding="4"
                         BorderBrush="Black"
                         BorderThickness="1"
                         Grid.RowSpan="2">
-                    <Border.Background>
-                        <ImageBrush Stretch="UniformToFill"
-                                    ImageSource="/harita.png" />
-                    </Border.Background>
-
+                    
+                    
                 </Border>
 
+                <!--charts-->
                 <Border Grid.Column="1"
                         BorderBrush="Black"
                         BorderThickness="1"
@@ -572,25 +592,140 @@
                         </Grid.ColumnDefinitions>
 
 
-                        <ScottPlot:WpfPlot x:Name="pressureChart"
+                        <lvc:CartesianChart Series="{Binding srCollectionPressure_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Margin="0,0,2,0"
+                                            Hoverable="False"
+                                            x:Name="pressureChart"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="0"
+                                            Grid.Row="0">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+                        <lvc:CartesianChart Series="{Binding srCollectionAltitude_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Hoverable="False"
+                                            Margin="2,0,2,0"
+                                            x:Name="altitudeChart"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="1"
+                                            Grid.Row="0">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+                        <lvc:CartesianChart Series="{Binding srCollectionVelocity_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Hoverable="False"
+                                            Margin="2,0,0,0"
+                                            x:Name="velocityChart"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="2"
+                                            Grid.Row="0">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+                        <lvc:CartesianChart Series="{Binding srCollectionTemperature_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Hoverable="False"
+                                            Margin="0,0,2,0"
+                                            x:Name="temperatureChart"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="0"
+                                            Grid.Row="1">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+                        <lvc:CartesianChart Series="{Binding srCollectionGyro_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Hoverable="False"
+                                            Margin="2,0,2,0"
+                                            x:Name="gyroChart"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="1"
+                                            Grid.Row="1">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+                        <lvc:CartesianChart Series="{Binding srCollectionAccel_mini}"
+                                            DisableAnimations="True"
+                                            LegendLocation="Bottom"
+                                            Hoverable="False"
+                                            x:Name="accelChart"
+                                            Margin="2,0,0,0"
+                                            MouseLeftButtonDown="expandChart"
+                                            DataTooltip="{x:Null}"
+                                            Grid.Column="2"
+                                            Grid.Row="1">
+                            <lvc:CartesianChart.AxisY>
+                                <lvc:Axis ShowLabels="true"
+                                          Position="LeftBottom"></lvc:Axis>
+                            </lvc:CartesianChart.AxisY>
+                            <lvc:CartesianChart.AxisX>
+                                <lvc:Axis ShowLabels="False"></lvc:Axis>
+                            </lvc:CartesianChart.AxisX>
+                        </lvc:CartesianChart>
+
+
+                        <!--<ScottPlot:WpfPlot x:Name="pressureChart"
                                            Grid.Column="0"
-                                           Grid.Row="0" 
-                                           LeftClicked="pressureChartClicked"/>
-                        <ScottPlot:WpfPlot x:Name="altitudeChart"
+                                           Grid.Row="0"
+                                           LeftClicked="expandChart" />-->
+                        <!--<ScottPlot:WpfPlot x:Name="altitudeChart"
                                            Grid.Column="1"
-                                           Grid.Row="0" />
-                        <ScottPlot:WpfPlot x:Name="velocityChart"
+                                           Grid.Row="0"
+                                           LeftClicked="expandChart" />-->
+                        <!--<ScottPlot:WpfPlot x:Name="velocityChart"
                                            Grid.Column="2"
-                                           Grid.Row="0" />
-                        <ScottPlot:WpfPlot x:Name="temperatureChart"
+                                           Grid.Row="0"
+                                           LeftClicked="expandChart" />-->
+                        <!--<ScottPlot:WpfPlot x:Name="temperatureChart"
                                            Grid.Column="0"
-                                           Grid.Row="1" />
-                        <ScottPlot:WpfPlot x:Name="gyroChart"
+                                           Grid.Row="1"
+                                           LeftClicked="expandChart" />-->
+                        <!--<ScottPlot:WpfPlot x:Name="gyroChart"
                                            Grid.Column="1"
-                                           Grid.Row="1" />
-                        <ScottPlot:WpfPlot x:Name="accelChart"
+                                           LeftClicked="expandChart"
+                                           Grid.Row="1" />-->
+                        <!--<ScottPlot:WpfPlot x:Name="accelChart"
                                            Grid.Column="2"
-                                           Grid.Row="1" />
+                                           Grid.Row="1"
+                                           LeftClicked="expandChart" />-->
 
 
 
@@ -600,6 +735,7 @@
 
                 </Border>
 
+                <!--expandChart-->
                 <Border BorderBrush="Black"
                         BorderThickness="1"
                         CornerRadius="10"
@@ -611,6 +747,149 @@
                     <Grid x:Name="expandedPlace">
 
 
+                        <!--<Grid x:Name="view_pressure"
+                              Visibility="Visible">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="150" />
+                            </Grid.ColumnDefinitions>
+
+
+
+                            <ScottPlot:WpfPlot x:Name="pressure"
+                                               Grid.Column="0" />
+
+                            <lvc:CartesianChart 
+                                                DisableAnimations="True"
+                                                x:Name ="detailChart"
+                                                Grid.Column="0">
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis 
+                                        ShowLabels="False">
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis Title="time"
+                                              ShowLabels="False">
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                            </lvc:CartesianChart>
+
+
+
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden"
+                                          Grid.Column="1">
+
+
+                                <StackPanel CanVerticallyScroll="True"
+                                            Grid.Column="1"
+                                            Background="White"
+                                            ScrollViewer.CanContentScroll="True">
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40" />
+                                            <RowDefinition Height="80" />
+                                            <RowDefinition Height="80" />
+                                            <RowDefinition Height="80" />
+                                            <RowDefinition Height="80" />
+                                        </Grid.RowDefinitions>
+
+
+                                        <TextBlock Grid.Row="0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Center"
+                                                   Text="Pressure (Pa)">
+
+                                        </TextBlock>
+
+                                        <Border Grid.Row="1"
+                                                Margin="3"
+                                                Padding="2"
+                                                CornerRadius="10"
+                                                BorderBrush="Black"
+                                                BorderThickness="1,1,1,1">
+
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Label Content="Current"
+                                                       Grid.Row="0"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+
+                                                <Label Content="{Binding pressure}"
+                                                       Name="uc_label_current"
+                                                       Grid.Row="1"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="2"
+                                                Margin="3"
+                                                Padding="2"
+                                                CornerRadius="10"
+                                                BorderBrush="Black"
+                                                BorderThickness="1,1,1,1">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Label Content="Max"
+                                                       Grid.Row="0"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+
+                                                <Label Content="{Binding altitude}"
+                                                       Name="uc_label_max"
+                                                       Grid.Row="1"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+                                            </Grid>
+                                        </Border>
+
+                                        <Border Grid.Row="3"
+                                                Margin="3"
+                                                Padding="2"
+                                                CornerRadius="10"
+                                                BorderBrush="Black"
+                                                BorderThickness="1,1,1,1">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+
+                                                <Label Content="Min"
+                                                       Grid.Row="0"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+
+                                                <Label Content="{Binding bataryVolt}"
+                                                       Name="uc_label_min"
+                                                       Grid.Row="1"
+                                                       HorizontalContentAlignment="Left"
+                                                       VerticalContentAlignment="Center"
+                                                       FontSize="18" />
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>-->
                     </Grid>
 
                 </Border>
@@ -634,7 +913,537 @@
                 BorderThickness="1,1,1,1"
                 BorderBrush="Black">
 
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden"
+                          PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
 
+                <StackPanel Orientation="Horizontal"
+                            ScrollViewer.CanContentScroll="True"
+                            HorizontalAlignment="Left"
+                            Height="193"
+                            VerticalAlignment="Top">
+
+                    <GroupBox Width="250"
+                              Header="Base"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Pressure (Pa)"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding pressure}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Altitude (ft)"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding altitude}"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Velocity (m/s)"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding velocity}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Temperature (C)"
+                                       Grid.Row="3"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding temperature}"
+                                       Grid.Row="3"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    
+                    <GroupBox Width="250"
+                              Header="GPS"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+
+                                <Label Content="Altitude"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding alt_gps}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Latitude"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding lat_gps}"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Longitude"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding lon_gps}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    
+                    <GroupBox Width="250"
+                              Header="Gyro"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+
+                                <Label Content="X Axis (Rad/s)"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding x_gyro}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Y Axis (Rad/s)"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding y_gyro}"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Z Axis (Rad/s)"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding z_gyro}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    
+                    <GroupBox Width="250"
+                              Header="Acceleration"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+
+                                <Label Content="X Axis (m/s2)"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding x_accel}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Y Axis (m/s2)"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding y_accel}"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Z Axis (m/s2)"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding z_accel}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    
+                    <GroupBox Width="150"
+                              Header="Status"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+
+                                <Label Content="Ready"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Take Off"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Ascent"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="First Deploy"
+                                       Grid.Row="3"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Drag"
+                                       Grid.Row="4"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Second Deploy"
+                                       Grid.Row="5"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Descent"
+                                       Grid.Row="6"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Landed"
+                                       Grid.Row="7"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    
+                    <GroupBox Width="150"
+                              Header="Error"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+
+                                <Label Content="First Deploy"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Second Deploy"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Stall"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    <GroupBox Width="250"
+                              Header="Info"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Package No"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding packageNo}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Status"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="00000000"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Error"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="00000000"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Check Sum"
+                                       Grid.Row="3"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding checkSum}"
+                                       Grid.Row="3"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+                    <GroupBox Width="250"
+                              Header="Device"
+                              Margin="4"
+                              FontSize="10"
+                              Foreground="#CC000000">
+
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+
+                                <Label Content="Serial No"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding serialNo}"
+                                       Grid.Row="0"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+
+                                <Label Content="Device Time"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding time}"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                
+                                <Label Content="Batary Voltage"
+                                       Grid.Row="2"
+                                       Grid.Column="0"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                                <Label Content="{Binding bataryVolt}"
+                                       Grid.Row="2"
+                                       Grid.Column="1"
+                                       FontSize="15"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"></Label>
+                            </Grid>
+                        </ScrollViewer>
+                    </GroupBox>
+
+                </StackPanel>
+                
+                
+            </ScrollViewer>
+                
         </Border>
 
     </Grid>

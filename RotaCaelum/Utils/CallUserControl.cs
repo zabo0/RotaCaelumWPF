@@ -15,8 +15,11 @@ namespace RotaCaelum.Utils
         {
             if(grid.Children.Count > 0)
             {
-                grid.Children.Clear();
-                grid.Children.Add(userControl);
+                if (grid.Children.OfType<UserControl>().FirstOrDefault().Name != userControl.Name)
+                {
+                    grid.Children.Clear();
+                    grid.Children.Add(userControl);
+                }
             }
             else
             {
