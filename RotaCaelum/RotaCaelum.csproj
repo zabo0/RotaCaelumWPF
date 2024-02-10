@@ -37,6 +37,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,7 +59,6 @@
     </ApplicationDefinition>
     <Compile Include="Models\ModelChartSeriesCollections.cs" />
     <Compile Include="Models\ModelTelemetry.cs" />
-    <Compile Include="Models\ObservableAltitudeValue.cs" />
     <Compile Include="UserControls\uc_acceleration.xaml.cs">
       <DependentUpon>uc_acceleration.xaml</DependentUpon>
     </Compile>
@@ -77,12 +78,10 @@
       <DependentUpon>uc_velocity.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\CallUserControl.cs" />
-    <Compile Include="Utils\MapTileLayer.cs" />
-    <Compile Include="Utils\MapTileSource.cs" />
-    <Compile Include="Utils\ObservableValue.cs" />
+    <Compile Include="Utils\DataFileWriter.cs" />
     <Compile Include="Utils\SelectedChartSingleton.cs" />
+    <Compile Include="Utils\SerialComminication.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\ChartsViewModels.cs" />
     <Compile Include="ViewModels\ViewModelTelemetry.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -176,8 +175,6 @@
       <Version>8.2.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

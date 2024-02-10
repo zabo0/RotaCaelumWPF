@@ -12,8 +12,8 @@ namespace RotaCaelum.Models
     {
 
         public byte serialNo { get; set; }
-        public byte packageNo { get; set; }
-        public long time { get; set; }
+        public int packageNo { get; set; }
+        public float time { get; set; }
         public byte status { get; set; }
         public byte error { get; set; }
         public float pressure { get; set; }

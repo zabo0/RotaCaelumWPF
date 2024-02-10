@@ -9,13 +9,13 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
         xmlns:map="clr-namespace:MapControl;assembly=MapControl.WPF"
-        xmlns:viewmodels="clr-namespace:RotaCaelum.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewmodels:ViewModelTelemetry}"
+        d:DataContext="{d:DesignInstance Type=local:ViewModelTelemetry}"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
         MinHeight="920"
-        MinWidth="1500">
+        MinWidth="1500"
+        Closing="OnWindowClosing">
 
     <Window.DataContext>
         <local:ViewModelTelemetry />
@@ -72,6 +72,7 @@
                         Name="button_start"
                         Background="LIME"
                         FontSize="16"
+                        IsEnabled="False"
                         Margin="0,0,2,0"
                         Click="StartButtonClicked" />
 
@@ -206,21 +207,34 @@
                                    FontSize="14" />
 
                             <ComboBox Grid.Column="1"
+                                      Name="comboBox_comPort"
                                       Margin="5"
                                       Grid.Row="0" />
 
                             <ComboBox Grid.Column="1"
                                       Margin="5"
+                                      Name="comboBox_baudRate"
                                       Grid.Row="1" />
 
                             <Button Grid.Column="3"
+                                    Name="button_refreshComPorts"
                                     Grid.Row="0"
-                                    Margin="3">
+                                    Margin="3"
+                                    Click="button_refreshComPorts_Click">
                                 <Button.Background>
                                     <ImageBrush Stretch="Uniform"
                                                 ImageSource="/refresh.png" />
                                 </Button.Background>
                             </Button>
+
+                            <ProgressBar Name="progressBar_comPortSearch"
+                                         Grid.Column="0"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="100"
+                                         Visibility="Collapsed"
+                                         Margin="0,5,0,5"
+                                         Grid.Row="2" />
 
                             <Label Grid.Column="1"
                                    Grid.Row="2"
@@ -239,10 +253,12 @@
                             <Button Grid.Column="0"
                                     Grid.ColumnSpan="3"
                                     Background="Lime"
+                                    Name="button_openComPort"
                                     Content="Open Port"
                                     FontSize="14"
                                     Grid.Row="4"
-                                    Margin="0,4,0,0" />
+                                    Margin="0,4,0,0"
+                                    Click="openComportButton_clicked" />
 
 
                         </Grid>
@@ -260,8 +276,9 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="2*" />
@@ -278,13 +295,21 @@
                             <TextBox Grid.Column="1"
                                      Margin="0,4,0,4"
                                      IsReadOnly="True"
-                                     Text="Tap to select folder"
+                                     Text="Select folder"
+                                     Name="textBox_saveLocation"
                                      Grid.Row="0"
                                      MaxLines="1"
-                                     VerticalContentAlignment="Center" />
+                                     VerticalContentAlignment="Center"/>
+
+                            <Button Grid.Column="2"
+                                    Margin="5"
+                                    Content="..."
+                                    Grid.Row="0"
+                                    Click="saveLocation_Clicked" />
 
                             <CheckBox Grid.Column="0"
                                       Grid.ColumnSpan="2"
+                                      Name="checkBox_dontSaveData"
                                       Grid.Row="1"
                                       Content="Don't Save Data"
                                       HorizontalAlignment="Left"
@@ -302,7 +327,7 @@
                               Name="groupBox_firstDeploy"
                               FontSize="10"
                               Foreground="#CC000000"
-                              Height="200">
+                              Height="150">
 
 
                         <StackPanel>
@@ -321,16 +346,21 @@
                                 </Grid.ColumnDefinitions>
 
                                 <CheckBox Grid.Column="0"
-                                          IsChecked="True"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
+                                          Name="checkBox_firsDeploymentPitchAngle"
                                           FontSize="14"
                                           Content="Pitch Angle"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
                                          MaxLines="1"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         Name="textBox_firsDeploymentPitchAngle"
                                          FontSize="14"
                                          VerticalContentAlignment="Center"
-                                         Margin="0,4,0,4" />
+                                         Margin="0,4,0,4"
+                                         IsEnabled="False" />
                             </Grid>
 
                             <Grid>
@@ -341,12 +371,18 @@
 
                                 <CheckBox Grid.Column="0"
                                           FontSize="14"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
+                                          Name="checkBox_firstDeploymentVelocity"
                                           Content="Velocity"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
                                          MaxLines="1"
+                                         IsEnabled="False"
                                          FontSize="14"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         Name="textBox_firstDeploymentVelocity"
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4" />
                             </Grid>
@@ -359,12 +395,18 @@
 
                                 <CheckBox Grid.Column="0"
                                           FontSize="14"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
                                           Content="Altitude"
+                                          x:Name="checkBox_firstDeploymentAltitude"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
                                          MaxLines="1"
+                                         Name="textBox_firstDeploymentAltitude"
                                          FontSize="14"
+                                         IsEnabled="False"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4" />
                             </Grid>
@@ -376,14 +418,14 @@
                                 </Grid.ColumnDefinitions>
 
                                 <CheckBox Grid.Column="0"
-                                          IsChecked="True"
                                           FontSize="14"
+                                          x:Name="checkBox_firstDeploymentApogee"
                                           Content="Apogee"
                                           VerticalContentAlignment="Center"
                                           Margin="0,4,0,4" />
                             </Grid>
 
-                            <Grid Margin="0,5,0,0">
+                            <!--<Grid Margin="0,5,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
@@ -391,9 +433,12 @@
 
                                 <Button Grid.Column="1"
                                         FontSize="14"
+                                        IsEnabled="False"
+                                        Name="button_aplyFirstDeployment"
+                                        Click="aplyFirstDeploymentConfig"
                                         Height="35"
                                         Content="Apply" />
-                            </Grid>
+                            </Grid>-->
                         </StackPanel>
 
 
@@ -404,7 +449,7 @@
                               Name="groupBox_secondDeploy"
                               FontSize="10"
                               Foreground="#CC000000"
-                              Height="170">
+                              Height="150">
 
 
                         <StackPanel>
@@ -424,11 +469,17 @@
 
                                 <CheckBox Grid.Column="0"
                                           FontSize="14"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
+                                          Name="checkBox_secondDeploymentPitchAngle"
                                           Content="Pitch Angle"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
+                                         Name="textBox_secondDeploymentPitchAngle"
                                          MaxLines="1"
+                                         IsEnabled="False"
+                                         PreviewTextInput="NumberValidationTextBox"
                                          FontSize="14"
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4" />
@@ -442,12 +493,18 @@
 
                                 <CheckBox Grid.Column="0"
                                           FontSize="14"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
+                                          Name="checkBox_secondDeploymentVelocity"
                                           Content="Velocity"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
                                          MaxLines="1"
                                          FontSize="14"
+                                         IsEnabled="False"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         Name="textBox_secondDeploymentVelocity"
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4" />
                             </Grid>
@@ -460,20 +517,36 @@
 
                                 <CheckBox Grid.Column="0"
                                           FontSize="14"
-                                          IsChecked="True"
+                                          Checked="CheckBoxChanged"
+                                          Unchecked="CheckBoxChanged"
+                                          Name="checkBox_secondDeploymentAltitude"
                                           Content="Altitude"
                                           VerticalContentAlignment="Center" />
 
                                 <TextBox Grid.Column="1"
                                          MaxLines="1"
                                          FontSize="14"
+                                         IsEnabled="False"
+                                         PreviewTextInput="NumberValidationTextBox"
+                                         Name="textBox_secondDeploymentAltitude"
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4" />
                             </Grid>
 
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
 
+                                <CheckBox Grid.Column="0"
+                                          FontSize="14"
+                                          x:Name="checkBox_dontUseSecondDeployment"
+                                          Content="Don't use second deployment"
+                                          VerticalContentAlignment="Center"
+                                          Margin="0,4,0,4" />
+                            </Grid>
 
-                            <Grid Margin="0,5,0,0">
+                            <!--<Grid Margin="0,5,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
@@ -482,17 +555,29 @@
                                 <CheckBox Content="Don't use"
                                           Grid.Column="0"
                                           FontSize="14"
+                                          Name="checkBox_dontUseSecondDeployment"
                                           VerticalContentAlignment="Bottom" />
 
                                 <Button Grid.Column="1"
                                         FontSize="14"
+                                        Click="aplySecondDeploymentConfig"
                                         Height="35"
+                                        Name="button_aplySeconDeployment"
+                                        IsEnabled="False"
                                         Content="Apply" />
-                            </Grid>
+                            </Grid>-->
                         </StackPanel>
 
 
                     </GroupBox>
+
+                    <Button Content="Apply Deployment Configs"
+                            Name="button_applyDeploymentConfig"
+                            Margin="6"
+                            Height="38"
+                            FontSize="12"
+                            Click="applyDeploymentConfigs" />
+
 
                     <!--settings-->
 
