@@ -27,7 +27,7 @@
                             Hoverable="False"
                             Grid.Column="0">
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis ShowLabels="False">
+                <lvc:Axis ShowLabels="true">
                 </lvc:Axis>
             </lvc:CartesianChart.AxisY>
 
@@ -57,6 +57,7 @@
                         <RowDefinition Height="80" />
                     </Grid.RowDefinitions>
 
+
                     <Border Grid.Row="0"
                             Margin="3"
                             Padding="2"
@@ -70,20 +71,20 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Current (Pa)"
+                            <Label Content="Temperature"
                                    Grid.Row="0"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
-                                   Name="uc_label_currentPressure"
+                            <Label Content="C"
                                    Grid.Row="1"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
                         </Grid>
                     </Border>
+
 
                     <Border Grid.Row="1"
                             Margin="3"
@@ -91,20 +92,21 @@
                             CornerRadius="10"
                             BorderBrush="Black"
                             BorderThickness="1,1,1,1">
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Max (Pa)"
+                            <Label Content="Current"
                                    Grid.Row="0"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
-                                   Name="uc_label_maxPressure"
+                            <Label Content="{Binding temperature}"
+                                   Name="uc_label_currentPressure"
                                    Grid.Row="1"
                                    HorizontalContentAlignment="Left"
                                    VerticalContentAlignment="Center"
@@ -124,13 +126,40 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Min (Pa)"
+                            <Label Content="Max"
                                    Grid.Row="0"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
+                            <Label Content=""
+                                   Name="uc_label_maxPressure"
+                                   Grid.Row="1"
+                                   HorizontalContentAlignment="Left"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="18" />
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="3"
+                            Margin="3"
+                            Padding="2"
+                            CornerRadius="10"
+                            BorderBrush="Black"
+                            BorderThickness="1,1,1,1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Min"
+                                   Grid.Row="0"
+                                   HorizontalContentAlignment="Center"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="18" />
+
+                            <Label Content=""
                                    Name="uc_label_minPressure"
                                    Grid.Row="1"
                                    HorizontalContentAlignment="Left"

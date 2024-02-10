@@ -485,7 +485,7 @@ namespace RotaCaelum.ViewModels
                     
                     dataFileWriter.writeData(dataPackageForDataFile);
 
-                    if (index >= 1000)
+                    if (index >= 500)
                     {
                         chartValuesPressure.RemoveAt(0);
                         chartValuesAltitude.RemoveAt(0);
@@ -525,40 +525,6 @@ namespace RotaCaelum.ViewModels
         {
             return BitConverter.ToSingle(data, startIndex);
         }
-
-
-
-        //private void ComPortWorker_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    getDataFromComPort();
-
-        //    if (comPortWorker.CancellationPending)
-        //    {
-        //        e.Cancel = true;
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        e.Result = 0;
-        //    }
-        //}
-
-        //private void ComPortWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    //throw new NotImplementedException();
-        //}
-
-        //private void ComPortWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        //{
-        //    switch (e.ProgressPercentage)
-        //    {
-        //        case 0:
-        //            {
-        //                Console.WriteLine(e.UserState.ToString());
-        //                break;
-        //            }
-        //    }
-        //}
 
         public void startReadingPort()
         {

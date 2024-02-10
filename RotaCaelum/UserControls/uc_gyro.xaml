@@ -25,10 +25,9 @@
                             Series="{Binding srCollectionGyro}"
                             x:Name="detailChart"
                             Hoverable="False"
-                            DataTooltip="{x:Null}"
                             Grid.Column="0">
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis ShowLabels="False">
+                <lvc:Axis ShowLabels="true">
                 </lvc:Axis>
             </lvc:CartesianChart.AxisY>
 
@@ -71,16 +70,15 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Current (Pa)"
+                            <Label Content="Gyro"
                                    Grid.Row="0"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
-                                   Name="uc_label_currentPressure"
+                            <Label Content="rad/s"
                                    Grid.Row="1"
-                                   HorizontalContentAlignment="Left"
+                                   HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
                         </Grid>
@@ -92,20 +90,21 @@
                             CornerRadius="10"
                             BorderBrush="Black"
                             BorderThickness="1,1,1,1">
+
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Max (Pa)"
+                            <Label Content="X Gyro"
                                    Grid.Row="0"
                                    HorizontalContentAlignment="Left"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
-                                   Name="uc_label_maxPressure"
+                            <Label Content="{Binding x_gyro}"
+                                   Name="uc_label_currentPressure"
                                    Grid.Row="1"
                                    HorizontalContentAlignment="Left"
                                    VerticalContentAlignment="Center"
@@ -125,13 +124,40 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Content="Min (Pa)"
+                            <Label Content="Y Gryo"
                                    Grid.Row="0"
                                    HorizontalContentAlignment="Left"
                                    VerticalContentAlignment="Center"
                                    FontSize="18" />
 
-                            <Label Content="0.0000"
+                            <Label Content="{Binding y_gyro}"
+                                   Name="uc_label_maxPressure"
+                                   Grid.Row="1"
+                                   HorizontalContentAlignment="Left"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="18" />
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="3"
+                            Margin="3"
+                            Padding="2"
+                            CornerRadius="10"
+                            BorderBrush="Black"
+                            BorderThickness="1,1,1,1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Z Gyro"
+                                   Grid.Row="0"
+                                   HorizontalContentAlignment="Left"
+                                   VerticalContentAlignment="Center"
+                                   FontSize="18" />
+
+                            <Label Content="{Binding z_gyro}"
                                    Name="uc_label_minPressure"
                                    Grid.Row="1"
                                    HorizontalContentAlignment="Left"
