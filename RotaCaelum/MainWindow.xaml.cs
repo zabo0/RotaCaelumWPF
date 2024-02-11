@@ -1,41 +1,19 @@
-﻿using MapControl.Caching;
-using MapControl;
-using RotaCaelum.UserControls;
+﻿using RotaCaelum.UserControls;
 using RotaCaelum.Utils;
-using ScottPlot;
-using ScottPlot.Plottable;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.IO;
 using RotaCaelum.ViewModels;
 using LiveCharts.Wpf;
-using LiveCharts;
 using System.ComponentModel;
-using RotaCaelum.Models;
-using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using CheckBox = System.Windows.Controls.CheckBox;
 using MessageBox = System.Windows.MessageBox;
-using System.IO.Ports;
-using System.Management;
-using static System.Resources.ResXFileRef;
 using Button = System.Windows.Controls.Button;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace RotaCaelum
 {
@@ -48,8 +26,6 @@ namespace RotaCaelum
         private Properties.Settings settings = Properties.Settings.Default;
 
         private ViewModelTelemetry viewModelTelemetry;
-        private ModelTelemetry telemetry;
-
 
         private DataFileWriter dataFileWriter = DataFileWriter.Instance;
 
@@ -66,18 +42,14 @@ namespace RotaCaelum
 
             viewModelTelemetry = new ViewModelTelemetry();
             DataContext = viewModelTelemetry;
-            telemetry = new ModelTelemetry();
 
             comPortWorker.DoWork += ComPortWorker_DoWork;
             comPortWorker.RunWorkerCompleted += ComPortWorker_RunWorkerCompleted;
-            comPortWorker.ProgressChanged += ComPortWorker_ProgressChanged;
             comPortWorker.WorkerReportsProgress = true;
 
-            loadConfigsToView();
 
+            textBox_saveLocation.Text = settings.SaveDataFilePath;
 
-
-            dataFileWriter.createNewDataFile();
         }
 
         private void expandChart(object sender, RoutedEventArgs e)
@@ -128,13 +100,6 @@ namespace RotaCaelum
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             var scrollViewer = (ScrollViewer)sender;
-
-            //if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-            //{
-            //    scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
-            //    e.Handled = true;
-            //}
-
             scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - e.Delta);
             e.Handled = true;
         }
@@ -145,8 +110,16 @@ namespace RotaCaelum
             {
                 if(isDeploymentConfigsAplied)
                 {
-                    dataFileWriter.writeDataInfo("start");
-                    viewModelTelemetry.startReadingPort();
+                    try
+                    {
+                        dataFileWriter.startNewSession(isDeploymentConfigsAplied);
+                        dataFileWriter.writeDataInfo("start");
+                        viewModelTelemetry.startReadingPort();
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
 
                     button_start.Content = "FINISH";
                     button_start.Background = Brushes.Red;
@@ -155,6 +128,7 @@ namespace RotaCaelum
                     groupBox_firstDeploy.IsEnabled = false;
                     groupBox_secondDeploy.IsEnabled = false;
                     groupBox_settings.IsEnabled = false;
+                    border_configs.IsEnabled = false;
                 }
                 else
                 {
@@ -163,9 +137,16 @@ namespace RotaCaelum
                     if(Result == MessageBoxResult.Yes)
                     {
                         //goWithDefaultConfigs
-                        dataFileWriter.writeDataInfo("start");
-                        viewModelTelemetry.startReadingPort();
-
+                        try
+                        {
+                            dataFileWriter.startNewSession(isDeploymentConfigsAplied);
+                            dataFileWriter.writeDataInfo("start");
+                            viewModelTelemetry.startReadingPort();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
 
                         button_start.Content = "FINISH";
                         button_start.Background = Brushes.Red;
@@ -174,14 +155,21 @@ namespace RotaCaelum
                         groupBox_firstDeploy.IsEnabled = false;
                         groupBox_secondDeploy.IsEnabled = false;
                         groupBox_settings.IsEnabled = false;
+                        border_configs.IsEnabled = false;
                     }
                 }
             }
             else if (button_start.Content.Equals("FINISH"))
             {
-                dataFileWriter.writeDataInfo("finish");
-                viewModelTelemetry.stopReadingPort();
-
+                try
+                {
+                    dataFileWriter.writeDataInfo("finish");
+                    viewModelTelemetry.stopReadingPort();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
 
                 button_start.Content = "START";
                 button_start.Background = Brushes.Lime;
@@ -190,12 +178,10 @@ namespace RotaCaelum
                 groupBox_firstDeploy.IsEnabled = true;
                 groupBox_secondDeploy.IsEnabled = true;
                 groupBox_settings.IsEnabled = true;
+                border_configs.IsEnabled = true;
 
             }
         }
-
-
-
         private void ManuelDeploy_1Clicked(object sender, RoutedEventArgs e)
         {
             
@@ -219,15 +205,20 @@ namespace RotaCaelum
                 settings.SaveDataFilePath = fbd.SelectedPath;
                 settings.Save();
                 textBox_saveLocation.Text = fbd.SelectedPath;
+
+                groupBox_comPortConfigs.IsEnabled = true;
+                refreshComPortsConfigs();
             }
         }
 
         private void loadConfigsToView()
         {
             checkBox_EMERGENCY_RESCUE_MODE.IsChecked = settings.EMERGENCY_RESCUE_MODE;
-            textBox_saveLocation.Text = settings.SaveDataFilePath;
-            checkBox_dontSaveData.IsChecked = settings.DontSaveData;
-
+            if(textBox_saveLocation.Text != "Select Location")
+            {
+                textBox_saveLocation.Text = settings.SaveDataFilePath;
+                checkBox_dontSaveData.IsChecked = settings.DontSaveData;
+            }
 
             if(settings.FirstDeployment_pitchAngle == -1)
             {
@@ -288,8 +279,6 @@ namespace RotaCaelum
             }
 
             checkBox_dontUseSecondDeployment.IsChecked = settings.SecondDeployment_dontUse;
-
-
 
             refreshComPortsConfigs();
         }
@@ -380,13 +369,10 @@ namespace RotaCaelum
             }
         }
         
-
-
         private void button_refreshComPorts_Click(object sender, RoutedEventArgs e)
         {
             refreshComPortsConfigs();
         }
-
 
         private void refreshComPortsConfigs()
         {
@@ -397,11 +383,9 @@ namespace RotaCaelum
             comPortWorker.RunWorkerAsync();
             progressBar_comPortSearch.Visibility = Visibility.Visible;
         }
-       
 
         private void ComPortWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
             comboBox_comPort.Items.Clear();
             comboBox_baudRate.Items.Clear();
 
@@ -438,11 +422,6 @@ namespace RotaCaelum
             
         }
 
-        private void ComPortWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
-        }
-
         private void openComportButton_clicked(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -450,11 +429,11 @@ namespace RotaCaelum
             {
                 if (comboBox_comPort.SelectedItem.ToString() != null)
                 {
-                    settings.COM_PORT = comboBox_comPort.SelectedItem.ToString();
+                    settings.COM_PORT = comboBox_comPort.Text;
                 }
                 if (comboBox_baudRate.SelectedItem != null)
                 {
-                    settings.BaudRate = (int)comboBox_baudRate.SelectedItem;
+                    settings.BaudRate = int.Parse(comboBox_baudRate.Text);
                 }
                 settings.Save();
 
@@ -472,12 +451,10 @@ namespace RotaCaelum
                         groupBox_firstDeploy.IsEnabled = true;
                         groupBox_secondDeploy.IsEnabled = true;
                         viewModelTelemetry.stopReadingPort();
-
-                        dataFileWriter.writeDataInfo("port opened: " + settings.COM_PORT);
                     }
                     else
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.ToString());
                     }
                 });
             }
@@ -487,18 +464,16 @@ namespace RotaCaelum
                 button.Background = Brushes.Lime;
                 serialComminication.closeComPort();
                 button_start.IsEnabled = false;
+                groupBox_firstDeploy.IsEnabled = false;
+                groupBox_secondDeploy.IsEnabled = false;
                 button_applyDeploymentConfig.IsEnabled = false;
-                dataFileWriter.writeDataInfo("port closed: " + settings.COM_PORT);
             }            
         }
-
-
-        
-
-        
-
         private void applyDeploymentConfigs(object sender, RoutedEventArgs e)
         {
+
+            groupBox_firstDeploy.IsEnabled = false;
+            groupBox_secondDeploy.IsEnabled = false;
             saveDeploymentConfigs();
 
             viewModelTelemetry.sendDeploymentConfigs((bool result) =>
@@ -506,20 +481,8 @@ namespace RotaCaelum
                 if (result)
                 {
                     isDeploymentConfigsAplied = true;
-
-                    string configs_1 = "first deployment configs aplied:" +
-                    "\n\t\t\tpithc angle: " + settings.FirstDeployment_pitchAngle.ToString() +
-                    "\n\t\t\tvelocity: " + settings.FirstDeployment_velocity.ToString() +
-                    "\n\t\t\taltitude: " + settings.FirstDeployment_altitude.ToString() +
-                    "\n\t\t\tapogee: " + settings.FirstDeployment_apogee.ToString();
-
-                    string configs_2 = "first deployment configs aplied:" +
-                    "\n\t\t\tpithc angle: " + settings.SecondDeployment_pitchAngle.ToString() +
-                    "\n\t\t\tvelocity: " + settings.SecondDeployment_velocity.ToString() +
-                    "\n\t\t\taltitude: " + settings.SecondDeployment_altitude.ToString() +
-                    "\n\t\t\tdont use: " + settings.SecondDeployment_dontUse.ToString();
-                    dataFileWriter.writeDataInfo(configs_1);
-                    dataFileWriter.writeDataInfo(configs_2);
+                    groupBox_firstDeploy.IsEnabled = true;
+                    groupBox_secondDeploy.IsEnabled = true;
                 }
             });
         }
@@ -646,7 +609,18 @@ namespace RotaCaelum
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            dataFileWriter.writeDataInfo("Program Closed");
+            //dataFileWriter.writeDataInfo("Program Closed");
+        }
+
+        private void saveDataFilePathTextChanged(object sender, TextChangedEventArgs e)
+        {
+
+
+            if (textBox_saveLocation.Text != "Select location")
+            {
+                groupBox_comPortConfigs.IsEnabled = true;
+                refreshComPortsConfigs();
+            }
         }
     }
 

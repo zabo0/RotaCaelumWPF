@@ -37,7 +37,6 @@ namespace RotaCaelum.ViewModels
 
         private DataFileWriter dataFileWriter = DataFileWriter.Instance;
         int index = 0;
-        int indexToDummy = 0;
 
         bool isReadingPort = false;
 
@@ -56,13 +55,6 @@ namespace RotaCaelum.ViewModels
             InitializeLineSeries();
             telemetry = new ModelTelemetry();
             collections = new ModelChartSeriesCollections();
-
-            //comPortWorker.DoWork += ComPortWorker_DoWork;
-            //comPortWorker.RunWorkerCompleted += ComPortWorker_RunWorkerCompleted;
-            //comPortWorker.ProgressChanged += ComPortWorker_ProgressChanged;
-            //comPortWorker.WorkerReportsProgress = true;
-            //comPortWorker.WorkerSupportsCancellation = true;
-
 
             serialComminication.serialComPort.DataReceived += SerialComPort_DataReceived;
 
@@ -428,6 +420,7 @@ namespace RotaCaelum.ViewModels
 
                     for (int i = 0; i < 66; i++)
                     {
+                        serialComminication.serialComPort.ReadTimeout = 500;
                         dataBuffer[i] = (byte)serialComminication.serialComPort.ReadByte();
                     }
 
@@ -460,30 +453,30 @@ namespace RotaCaelum.ViewModels
                     checkSum = dataBuffer[65];
 
 
-                    string[] dataPackageForDataFile = new string[21];
-                    dataPackageForDataFile[0] = index.ToString();
-                    dataPackageForDataFile[1] = serialNo.ToString();
-                    dataPackageForDataFile[2] = packageNo.ToString();
-                    dataPackageForDataFile[3] = time.ToString();
-                    dataPackageForDataFile[4] = status.ToString();
-                    dataPackageForDataFile[5] = error.ToString();
-                    dataPackageForDataFile[6] = pressure.ToString();
-                    dataPackageForDataFile[7] = altitude.ToString();
-                    dataPackageForDataFile[8] = temperature.ToString();
-                    dataPackageForDataFile[9] = bataryVolt.ToString();
-                    dataPackageForDataFile[10] = velocity.ToString();
-                    dataPackageForDataFile[11] = x_accel.ToString();
-                    dataPackageForDataFile[12] = y_accel.ToString();
-                    dataPackageForDataFile[13] = z_accel.ToString();
-                    dataPackageForDataFile[14] = x_gyro.ToString();
-                    dataPackageForDataFile[15] = y_gyro.ToString();
-                    dataPackageForDataFile[16] = z_gyro.ToString();
-                    dataPackageForDataFile[17] = alt_gps.ToString();
-                    dataPackageForDataFile[18] = lat_gps.ToString();
-                    dataPackageForDataFile[19] = lon_gps.ToString();
-                    dataPackageForDataFile[20] = checkSum.ToString();
+                    //string[] dataPackageForDataFile = new string[21];
+                    //dataPackageForDataFile[0] = index.ToString();
+                    //dataPackageForDataFile[1] = serialNo.ToString();
+                    //dataPackageForDataFile[2] = packageNo.ToString();
+                    //dataPackageForDataFile[3] = time.ToString();
+                    //dataPackageForDataFile[4] = status.ToString();
+                    //dataPackageForDataFile[5] = error.ToString();
+                    //dataPackageForDataFile[6] = pressure.ToString();
+                    //dataPackageForDataFile[7] = altitude.ToString();
+                    //dataPackageForDataFile[8] = temperature.ToString();
+                    //dataPackageForDataFile[9] = bataryVolt.ToString();
+                    //dataPackageForDataFile[10] = velocity.ToString();
+                    //dataPackageForDataFile[11] = x_accel.ToString();
+                    //dataPackageForDataFile[12] = y_accel.ToString();
+                    //dataPackageForDataFile[13] = z_accel.ToString();
+                    //dataPackageForDataFile[14] = x_gyro.ToString();
+                    //dataPackageForDataFile[15] = y_gyro.ToString();
+                    //dataPackageForDataFile[16] = z_gyro.ToString();
+                    //dataPackageForDataFile[17] = alt_gps.ToString();
+                    //dataPackageForDataFile[18] = lat_gps.ToString();
+                    //dataPackageForDataFile[19] = lon_gps.ToString();
+                    //dataPackageForDataFile[20] = checkSum.ToString();
                     
-                    dataFileWriter.writeData(dataPackageForDataFile);
+                    //dataFileWriter.writeData(dataPackageForDataFile);
 
                     if (index >= 500)
                     {
@@ -518,7 +511,6 @@ namespace RotaCaelum.ViewModels
                 MessageBox.Show(ex.Message);
             }
 
-           
         }
 
         private float getFloat(byte[] data, int startIndex)
@@ -535,136 +527,6 @@ namespace RotaCaelum.ViewModels
         {
             isReadingPort = false;
         }
-
-        private void getDataFromComPort()
-        {
-            while (serialComminication.serialComPort.IsOpen)
-            {
-                try
-                {
-                    if (!comPortWorker.CancellationPending)
-                    {
-                        //byte[] data = new byte[serialComminication.serialComPort.BytesToRead];
-                        byte[] headerBuffer = new byte[2];
-                        serialComminication.serialComPort.Read(headerBuffer, 0, headerBuffer.Length);
-
-
-                        if (headerBuffer[0] != 0xE0 || headerBuffer[1] != 0xE1)
-                        {
-                            Console.WriteLine("Throwing invalid header: " + BitConverter.ToString(headerBuffer));
-                            serialComminication.serialComPort.DiscardInBuffer();
-                            return;
-                        }
-
-                        byte[] dataBuffer = new byte[66];
-
-                        for (int i = 0; i < 66; i++)
-                        {
-                            dataBuffer[i] = (byte)serialComminication.serialComPort.ReadByte();
-                        }
-
-                        //gelen byte datasini ayristir.
-
-                        index++;
-
-
-                        serialNo = dataBuffer[0];
-                        packageNo = BitConverter.ToUInt16(dataBuffer, 1);
-                        time = BitConverter.ToUInt32(dataBuffer, 3);
-                        status = dataBuffer[7];
-                        error = dataBuffer[8];
-                        pressure = BitConverter.ToUInt32(dataBuffer, 9);
-                        altitude = BitConverter.ToUInt32(dataBuffer, 13);
-                        temperature = BitConverter.ToUInt32(dataBuffer, 17);
-                        bataryVolt = BitConverter.ToUInt32(dataBuffer, 21);
-                        velocity = BitConverter.ToUInt32(dataBuffer, 25);
-                        x_accel = BitConverter.ToUInt32(dataBuffer, 29);
-                        y_accel = BitConverter.ToUInt32(dataBuffer, 33);
-                        z_accel = BitConverter.ToUInt32(dataBuffer, 37);
-                        x_gyro = BitConverter.ToUInt32(dataBuffer, 41);
-                        y_gyro = BitConverter.ToUInt32(dataBuffer, 45);
-                        z_gyro = BitConverter.ToUInt32(dataBuffer, 49);
-                        alt_gps = BitConverter.ToInt32(dataBuffer, 54);
-                        lat_gps = BitConverter.ToInt32(dataBuffer, 57);
-                        lon_gps = BitConverter.ToUInt32(dataBuffer, 61);
-                        checkSum = dataBuffer[65];
-
-                        string[] dataPackageForDataFile = new string[21];
-
-                        dataPackageForDataFile[0] = index.ToString();
-                        dataPackageForDataFile[1] = serialNo.ToString();
-                        dataPackageForDataFile[2] = packageNo.ToString();
-                        dataPackageForDataFile[3] = time.ToString();
-                        dataPackageForDataFile[4] = status.ToString();
-                        dataPackageForDataFile[5] = error.ToString();
-                        dataPackageForDataFile[6] = pressure.ToString();
-                        dataPackageForDataFile[7] = altitude.ToString();
-                        dataPackageForDataFile[8] = temperature.ToString();
-                        dataPackageForDataFile[9] = bataryVolt.ToString();
-                        dataPackageForDataFile[10] = velocity.ToString();
-                        dataPackageForDataFile[11] = x_accel.ToString();
-                        dataPackageForDataFile[12] = y_accel.ToString();
-                        dataPackageForDataFile[13] = z_accel.ToString();
-                        dataPackageForDataFile[14] = x_gyro.ToString();
-                        dataPackageForDataFile[15] = y_gyro.ToString();
-                        dataPackageForDataFile[16] = z_gyro.ToString();
-                        dataPackageForDataFile[17] = alt_gps.ToString();
-                        dataPackageForDataFile[18] = lat_gps.ToString();
-                        dataPackageForDataFile[19] = lon_gps.ToString();
-                        dataPackageForDataFile[20] = checkSum.ToString();
-
-                        dataFileWriter.writeDataPort(dataBuffer);
-                        dataFileWriter.writeData(dataPackageForDataFile);
-
-                        if (index >= 1000)
-                        {
-                            chartValuesPressure.RemoveAt(0);
-                            chartValuesAltitude.RemoveAt(0);
-                            chartValuesVelocity.RemoveAt(0);
-                            chartValuesTemperature.RemoveAt(0);
-                            chartValuesAccel_X.RemoveAt(0);
-                            chartValuesAccel_Y.RemoveAt(0);
-                            chartValuesAccel_Z.RemoveAt(0);
-                            chartValuesGyro_X.RemoveAt(0);
-                            chartValuesGyro_Y.RemoveAt(0);
-                            chartValuesGyro_Z.RemoveAt(0);
-                        }
-
-                        chartValuesPressure.Add(chartValuesPressure.LastOrDefault() + telemetry.pressure);
-                        chartValuesAltitude.Add(chartValuesAltitude.LastOrDefault() + telemetry.altitude);
-                        chartValuesVelocity.Add(chartValuesVelocity.LastOrDefault() + telemetry.velocity);
-                        chartValuesTemperature.Add(chartValuesTemperature.LastOrDefault() + telemetry.temperature);
-
-                        chartValuesAccel_X.Add(chartValuesAccel_X.LastOrDefault() + telemetry.x_accel);
-                        chartValuesAccel_Y.Add(chartValuesAccel_Y.LastOrDefault() + telemetry.y_accel);
-                        chartValuesAccel_Z.Add(chartValuesAccel_Z.LastOrDefault() + telemetry.z_accel);
-
-                        chartValuesGyro_X.Add(chartValuesGyro_X.LastOrDefault() + telemetry.x_gyro);
-                        chartValuesGyro_Y.Add(chartValuesGyro_Y.LastOrDefault() + telemetry.y_gyro);
-                        chartValuesGyro_Z.Add(chartValuesGyro_Z.LastOrDefault() + telemetry.z_gyro);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    comPortWorker.ReportProgress(0, ex.Message);
-                }
-            }
-        }
-
-
-
-        static float NextFloat(Random random)
-        {
-            double mantissa = (random.NextDouble() * 2.0) - 1.0;
-            // choose -149 instead of -126 to also generate subnormal floats (*)
-            double exponent = Math.Pow(2.0, random.Next(-10, 10));
-            return (float)(mantissa * exponent);
-        }
-
 
         private void InitializeLineSeries()
         {
@@ -691,93 +553,6 @@ namespace RotaCaelum.ViewModels
             }
             result(true);
         }
-
-
-        public void dummyGetTelemetry()
-        {
-            indexToDummy++;
-
-            serialNo = 001;
-            packageNo = indexToDummy;
-            time = 14;
-            status = 3;
-            error = 4;
-            pressure = NextFloat(rand);
-            altitude = NextFloat(rand);
-            temperature = NextFloat(rand);
-            bataryVolt = NextFloat(rand);
-            velocity = NextFloat(rand);
-            x_accel = NextFloat(rand);
-            y_accel = NextFloat(rand);
-            z_accel = NextFloat(rand);
-            x_gyro = NextFloat(rand);
-            y_gyro = NextFloat(rand);
-            z_gyro = NextFloat(rand);
-            alt_gps = NextFloat(rand);
-            lat_gps = NextFloat(rand);
-            lon_gps = NextFloat(rand);
-            checkSum = 32;
-
-            string[] dataPackageForDataFile = new string[21];
-
-         //   string dataLine = "\t\t-<" + index + "|" + serialNo + "|" + packageNo + "|" + time + "|" + status + "|" +
-         //error + "|" + pressure + "|" + altitude + "|" + temperature + "|" + bataryVolt + "|" + velocity + "|" +
-         //x_accel + "|" + y_accel + "|" + z_accel + "|" + x_gyro + "|" + y_gyro + "|" + z_gyro + "|" + alt_gps + "|" + lat_gps + "|" + lon_gps + "|" + checkSum + ">"
-
-
-            dataPackageForDataFile[0] = indexToDummy.ToString();
-            dataPackageForDataFile[1] = serialNo.ToString();
-            dataPackageForDataFile[2] = packageNo.ToString();
-            dataPackageForDataFile[3] = time.ToString();
-            dataPackageForDataFile[4] = status.ToString();
-            dataPackageForDataFile[5] = error.ToString();
-            dataPackageForDataFile[6] = pressure.ToString();
-            dataPackageForDataFile[7] = altitude.ToString();
-            dataPackageForDataFile[8] = temperature.ToString();
-            dataPackageForDataFile[9] = bataryVolt.ToString();
-            dataPackageForDataFile[10] = velocity.ToString();
-            dataPackageForDataFile[11]= x_accel.ToString();
-            dataPackageForDataFile[12] = y_accel.ToString();
-            dataPackageForDataFile[13] = z_accel.ToString();
-            dataPackageForDataFile[14] = x_gyro.ToString();
-            dataPackageForDataFile[15] = y_gyro.ToString();
-            dataPackageForDataFile[16] = z_gyro.ToString();
-            dataPackageForDataFile[17] = alt_gps.ToString();
-            dataPackageForDataFile[18] = lat_gps.ToString();
-            dataPackageForDataFile[19] = lon_gps.ToString();
-            dataPackageForDataFile[20] = checkSum.ToString();
-
-            dataFileWriter.writeData(dataPackageForDataFile);
-
-
-            if (indexToDummy >= 1000)
-            {
-                chartValuesPressure.RemoveAt(0);
-                chartValuesAltitude.RemoveAt(0);
-                chartValuesVelocity.RemoveAt(0);
-                chartValuesTemperature.RemoveAt(0);
-                chartValuesAccel_X.RemoveAt(0);
-                chartValuesAccel_Y.RemoveAt(0);
-                chartValuesAccel_Z.RemoveAt(0);
-                chartValuesGyro_X.RemoveAt(0);
-                chartValuesGyro_Y.RemoveAt(0);
-                chartValuesGyro_Z.RemoveAt(0);
-            }
-
-            chartValuesPressure.Add(chartValuesPressure.LastOrDefault() + telemetry.pressure);
-            chartValuesAltitude.Add(chartValuesAltitude.LastOrDefault() + telemetry.altitude);
-            chartValuesVelocity.Add(chartValuesVelocity.LastOrDefault() + telemetry.velocity);
-            chartValuesTemperature.Add(chartValuesTemperature.LastOrDefault() + telemetry.temperature);
-
-            chartValuesAccel_X.Add(chartValuesAccel_X.LastOrDefault() + telemetry.x_accel);
-            chartValuesAccel_Y.Add(chartValuesAccel_Y.LastOrDefault() + telemetry.y_accel);
-            chartValuesAccel_Z.Add(chartValuesAccel_Z.LastOrDefault() + telemetry.z_accel);
-
-            chartValuesGyro_X.Add(chartValuesGyro_X.LastOrDefault() + telemetry.x_gyro);
-            chartValuesGyro_Y.Add(chartValuesGyro_Y.LastOrDefault() + telemetry.y_gyro);
-            chartValuesGyro_Z.Add(chartValuesGyro_Z.LastOrDefault() + telemetry.z_gyro);
-        }
-
 
         private byte[] createPackageDeploymentConfigs()
         {

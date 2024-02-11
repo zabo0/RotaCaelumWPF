@@ -4,11 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RotaCaelum.ViewModels"
-        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        xmlns:ScottPlot="clr-namespace:ScottPlot;assembly=ScottPlot.WPF"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-        xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
-        xmlns:map="clr-namespace:MapControl;assembly=MapControl.WPF"
         d:DataContext="{d:DesignInstance Type=local:ViewModelTelemetry}"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -20,7 +16,7 @@
     <Window.DataContext>
         <local:ViewModelTelemetry />
     </Window.DataContext>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80" />
@@ -46,7 +42,7 @@
             </Border.Background>
         </Border>
 
-        
+
         <!--start-->
         <Border Grid.Row="1"
                 Grid.Column="0"
@@ -158,6 +154,7 @@
         <Border Margin="4,2,4,4"
                 Padding="4"
                 Grid.Column="0"
+                Name="border_configs"
                 Grid.Row="2"
                 Grid.RowSpan="3"
                 CornerRadius="10"
@@ -170,10 +167,70 @@
                             CanVerticallyScroll="True"
                             ScrollViewer.CanContentScroll="True">
 
+                    <!--save data-->
+                    <GroupBox Header="Save Data"
+                              Name="groupBox_saveData"
+                              FontSize="10"
+                              Foreground="#CC000000"
+                              Height="76">
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="28*" />
+                                <ColumnDefinition Width="70*" />
+                                <ColumnDefinition Width="131*" />
+                                <ColumnDefinition Width="33*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="2*" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0"
+                                   Grid.Row="0"
+                                   Padding="0"
+                                   Content="Save Location"
+                                   FontSize="14"
+                                   VerticalContentAlignment="Center"
+                                   Grid.ColumnSpan="2" />
+
+                            <TextBox Grid.Column="1"
+                                     Margin="70,4,0,4"
+                                     IsReadOnly="True"
+                                     Name="textBox_saveLocation"
+                                     Grid.Row="0"
+                                     Text="Select location"
+                                     MaxLines="1"
+                                     VerticalContentAlignment="Center"
+                                     TextChanged="saveDataFilePathTextChanged"
+                                     Grid.ColumnSpan="2" />
+
+                            <Button Grid.Column="3"
+                                    Margin="5,5,5,5"
+                                    Content="..."
+                                    Grid.Row="0"
+                                    Click="saveLocation_Clicked" />
+
+                            <CheckBox Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Name="checkBox_dontSaveData"
+                                      Grid.Row="1"
+                                      Content="Don't Save Data"
+                                      HorizontalAlignment="Left"
+                                      VerticalAlignment="Center" />
+
+
+
+                        </Grid>
+
+
+                    </GroupBox>
 
                     <!--com port config-->
                     <GroupBox Height="181"
                               Header="COM Port Config"
+                              IsEnabled="false"
+                              Name="groupBox_comPortConfigs"
                               FontSize="10"
                               Foreground="#CC000000">
 
@@ -267,65 +324,13 @@
 
                     </GroupBox>
 
-                    <!--save data-->
-                    <GroupBox Header="Save Data"
-                              Name="groupBox_saveData"
-                              FontSize="10"
-                              Foreground="#CC000000"
-                              Height="76">
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="1*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="2*" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-
-                            <Label Grid.Column="0"
-                                   Grid.Row="0"
-                                   Padding="0"
-                                   Content="Save Location"
-                                   FontSize="14"
-                                   VerticalContentAlignment="Center" />
-
-                            <TextBox Grid.Column="1"
-                                     Margin="0,4,0,4"
-                                     IsReadOnly="True"
-                                     Text="Select folder"
-                                     Name="textBox_saveLocation"
-                                     Grid.Row="0"
-                                     MaxLines="1"
-                                     VerticalContentAlignment="Center"/>
-
-                            <Button Grid.Column="2"
-                                    Margin="5"
-                                    Content="..."
-                                    Grid.Row="0"
-                                    Click="saveLocation_Clicked" />
-
-                            <CheckBox Grid.Column="0"
-                                      Grid.ColumnSpan="2"
-                                      Name="checkBox_dontSaveData"
-                                      Grid.Row="1"
-                                      Content="Don't Save Data"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Center" />
-
-
-
-                        </Grid>
-
-
-                    </GroupBox>
+                    
 
                     <!--first deploymen-->
                     <GroupBox Header="1. Deployment"
                               Name="groupBox_firstDeploy"
                               FontSize="10"
+                              IsEnabled="False"
                               Foreground="#CC000000"
                               Height="150">
 
@@ -343,6 +348,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
+                                    <!--<ColumnDefinition Width="50"/>-->
                                 </Grid.ColumnDefinitions>
 
                                 <CheckBox Grid.Column="0"
@@ -361,6 +367,11 @@
                                          VerticalContentAlignment="Center"
                                          Margin="0,4,0,4"
                                          IsEnabled="False" />
+
+                                <!--<Button Grid.Column="2"
+                                        Name="button_apply_firstDeployment_pitchAngle"
+                                        Content="Apply"
+                                        Margin="4,4,0,4"/>-->
                             </Grid>
 
                             <Grid>
@@ -448,6 +459,7 @@
                     <GroupBox Header="2. Deployment"
                               Name="groupBox_secondDeploy"
                               FontSize="10"
+                              IsEnabled="False"
                               Foreground="#CC000000"
                               Height="150">
 
@@ -574,6 +586,7 @@
                     <Button Content="Apply Deployment Configs"
                             Name="button_applyDeploymentConfig"
                             Margin="6"
+                            IsEnabled="False"
                             Height="38"
                             FontSize="12"
                             Click="applyDeploymentConfigs" />
@@ -652,8 +665,8 @@
                         BorderBrush="Black"
                         BorderThickness="1"
                         Grid.RowSpan="2">
-                    
-                    
+
+
                 </Border>
 
                 <!--charts-->
@@ -978,7 +991,7 @@
                     </Grid>
 
                 </Border>
-                
+
 
                 <!--<ScottPlot:WpfPlot x:Name="pressure"
                                    Grid.Column="1"
@@ -1082,7 +1095,7 @@
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
-                    
+
                     <GroupBox Width="250"
                               Header="GPS"
                               Margin="4"
@@ -1145,7 +1158,7 @@
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
-                    
+
                     <GroupBox Width="250"
                               Header="Gyro"
                               Margin="4"
@@ -1208,7 +1221,7 @@
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
-                    
+
                     <GroupBox Width="250"
                               Header="Acceleration"
                               Margin="4"
@@ -1271,7 +1284,7 @@
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
-                    
+
                     <GroupBox Width="150"
                               Header="Status"
                               Margin="4"
@@ -1350,7 +1363,7 @@
                             </Grid>
                         </ScrollViewer>
                     </GroupBox>
-                    
+
                     <GroupBox Width="150"
                               Header="Error"
                               Margin="4"
@@ -1507,7 +1520,7 @@
                                        FontSize="15"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"></Label>
-                                
+
                                 <Label Content="Batary Voltage"
                                        Grid.Row="2"
                                        Grid.Column="0"
@@ -1525,10 +1538,10 @@
                     </GroupBox>
 
                 </StackPanel>
-                
-                
+
+
             </ScrollViewer>
-                
+
         </Border>
 
     </Grid>

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace RotaCaelum.Utils
 {
@@ -67,9 +61,7 @@ namespace RotaCaelum.Utils
             try
             {
                 serialComPort.PortName = Properties.Settings.Default.COM_PORT.Split('(')[1].TrimEnd(')');
-                //serialComPort.PortName = "COM11";
                 serialComPort.BaudRate = Properties.Settings.Default.BaudRate;
-                //serialComPort.BaudRate = 9600;
                 serialComPort.Parity = Parity.None;
                 serialComPort.StopBits = StopBits.One;
                 serialComPort.DataBits = 8;
@@ -89,40 +81,5 @@ namespace RotaCaelum.Utils
                 serialComPort.Close();
             }
         }
-
-
     }
 }
-
-
-
-//public async Task getComPorts(Action<List<string>> callback) {
-
-//    List<string> tList;
-//    var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort");
-//    string[] portnames = SerialPort.GetPortNames();
-
-
-//    await Task.Run(() =>
-//    {
-//        var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-//        tList = (from n in portnames
-//                 join p in ports on n equals p["DeviceID"].ToString()
-//                 select n + " - " + p["Caption"]).ToList();
-
-//        callback(tList);
-//    });
-//}
-
-//public void getComPorts(Action<List<string>> callback)
-//{
-//    List<string> tList;
-//    var searcher = new ManagementObjectSearcher("SELECT * FROM WIN32_SerialPort");
-//    string[] portnames = SerialPort.GetPortNames();
-//    var ports = searcher.Get().Cast<ManagementBaseObject>().ToList();
-//    tList = (from n in portnames
-//             join p in ports on n equals p["DeviceID"].ToString()
-//             select n + " - " + p["Caption"]).ToList();
-
-//    callback(tList);
-//}

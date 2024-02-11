@@ -9,7 +9,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="BaudRate" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">115200</Value>
     </Setting>
     <Setting Name="SaveDataFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -36,7 +36,7 @@
       <Value Profile="(Default)">-1</Value>
     </Setting>
     <Setting Name="SecondDeployment_altitude" Type="System.Int16" Scope="User">
-      <Value Profile="(Default)">400</Value>
+      <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="SecondDeployment_dontUse" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

@@ -49,6 +49,7 @@ namespace RotaCaelum.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("115200")]
         public int BaudRate {
             get {
                 return ((int)(this["BaudRate"]));
@@ -156,7 +157,7 @@ namespace RotaCaelum.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400")]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
         public short SecondDeployment_altitude {
             get {
                 return ((short)(this["SecondDeployment_altitude"]));

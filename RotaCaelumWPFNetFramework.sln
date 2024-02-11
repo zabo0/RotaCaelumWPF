@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RotaCaelum", "RotaCaelum\RotaCaelum.csproj", "{CA2B5A74-C0B1-4193-A880-63B23EA10C54}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RotaCaelumSetup", "RotaCaelumSetup\RotaCaelumSetup.vdproj", "{81EC6E15-7FB6-414D-8740-CE9BC3C62BEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{CA2B5A74-C0B1-4193-A880-63B23EA10C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA2B5A74-C0B1-4193-A880-63B23EA10C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA2B5A74-C0B1-4193-A880-63B23EA10C54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81EC6E15-7FB6-414D-8740-CE9BC3C62BEB}.Debug|Any CPU.ActiveCfg = Debug
+		{81EC6E15-7FB6-414D-8740-CE9BC3C62BEB}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
