@@ -26,6 +26,5 @@ namespace RotaCaelum.Utils
                 grid.Children.Add(userControl);
             }
         }
-
     }
 }

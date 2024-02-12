@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RotaCaelum.ViewModels"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-        d:DataContext="{d:DesignInstance Type=local:ViewModelTelemetry}"
+        xmlns:wpf1="clr-namespace:Mapsui.UI.Wpf;assembly=Mapsui.UI.Wpf"
+        xmlns:viewmodels="clr-namespace:RotaCaelum.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ViewModelTelemetry}"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowStartupLocation="CenterScreen"
@@ -13,9 +14,6 @@
         MinWidth="1500"
         Closing="OnWindowClosing">
 
-    <Window.DataContext>
-        <local:ViewModelTelemetry />
-    </Window.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -666,6 +664,14 @@
                         BorderThickness="1"
                         Grid.RowSpan="2">
 
+                    <Grid x:Name="mapPlace">
+
+                        <wpf1:MapControl x:Name="mapControl"
+                                         VerticalAlignment="Stretch"
+                                         HorizontalAlignment="Stretch" />
+
+                    </Grid>
+                    
 
                 </Border>
 
@@ -800,32 +806,6 @@
                         </lvc:CartesianChart>
 
 
-                        <!--<ScottPlot:WpfPlot x:Name="pressureChart"
-                                           Grid.Column="0"
-                                           Grid.Row="0"
-                                           LeftClicked="expandChart" />-->
-                        <!--<ScottPlot:WpfPlot x:Name="altitudeChart"
-                                           Grid.Column="1"
-                                           Grid.Row="0"
-                                           LeftClicked="expandChart" />-->
-                        <!--<ScottPlot:WpfPlot x:Name="velocityChart"
-                                           Grid.Column="2"
-                                           Grid.Row="0"
-                                           LeftClicked="expandChart" />-->
-                        <!--<ScottPlot:WpfPlot x:Name="temperatureChart"
-                                           Grid.Column="0"
-                                           Grid.Row="1"
-                                           LeftClicked="expandChart" />-->
-                        <!--<ScottPlot:WpfPlot x:Name="gyroChart"
-                                           Grid.Column="1"
-                                           LeftClicked="expandChart"
-                                           Grid.Row="1" />-->
-                        <!--<ScottPlot:WpfPlot x:Name="accelChart"
-                                           Grid.Column="2"
-                                           Grid.Row="1"
-                                           LeftClicked="expandChart" />-->
-
-
 
                     </Grid>
 
@@ -845,149 +825,7 @@
                     <Grid x:Name="expandedPlace">
 
 
-                        <!--<Grid x:Name="view_pressure"
-                              Visibility="Visible">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="150" />
-                            </Grid.ColumnDefinitions>
-
-
-
-                            <ScottPlot:WpfPlot x:Name="pressure"
-                                               Grid.Column="0" />
-
-                            <lvc:CartesianChart 
-                                                DisableAnimations="True"
-                                                x:Name ="detailChart"
-                                                Grid.Column="0">
-                                <lvc:CartesianChart.AxisY>
-                                    <lvc:Axis 
-                                        ShowLabels="False">
-                                    </lvc:Axis>
-                                </lvc:CartesianChart.AxisY>
-
-                                <lvc:CartesianChart.AxisX>
-                                    <lvc:Axis Title="time"
-                                              ShowLabels="False">
-                                    </lvc:Axis>
-                                </lvc:CartesianChart.AxisX>
-                            </lvc:CartesianChart>
-
-
-
-                            <ScrollViewer VerticalScrollBarVisibility="Hidden"
-                                          Grid.Column="1">
-
-
-                                <StackPanel CanVerticallyScroll="True"
-                                            Grid.Column="1"
-                                            Background="White"
-                                            ScrollViewer.CanContentScroll="True">
-
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="40" />
-                                            <RowDefinition Height="80" />
-                                            <RowDefinition Height="80" />
-                                            <RowDefinition Height="80" />
-                                            <RowDefinition Height="80" />
-                                        </Grid.RowDefinitions>
-
-
-                                        <TextBlock Grid.Row="0"
-                                                   VerticalAlignment="Center"
-                                                   FontSize="20"
-                                                   HorizontalAlignment="Center"
-                                                   Text="Pressure (Pa)">
-
-                                        </TextBlock>
-
-                                        <Border Grid.Row="1"
-                                                Margin="3"
-                                                Padding="2"
-                                                CornerRadius="10"
-                                                BorderBrush="Black"
-                                                BorderThickness="1,1,1,1">
-
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-
-                                                <Label Content="Current"
-                                                       Grid.Row="0"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-
-                                                <Label Content="{Binding pressure}"
-                                                       Name="uc_label_current"
-                                                       Grid.Row="1"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-                                            </Grid>
-                                        </Border>
-
-                                        <Border Grid.Row="2"
-                                                Margin="3"
-                                                Padding="2"
-                                                CornerRadius="10"
-                                                BorderBrush="Black"
-                                                BorderThickness="1,1,1,1">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-
-                                                <Label Content="Max"
-                                                       Grid.Row="0"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-
-                                                <Label Content="{Binding altitude}"
-                                                       Name="uc_label_max"
-                                                       Grid.Row="1"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-                                            </Grid>
-                                        </Border>
-
-                                        <Border Grid.Row="3"
-                                                Margin="3"
-                                                Padding="2"
-                                                CornerRadius="10"
-                                                BorderBrush="Black"
-                                                BorderThickness="1,1,1,1">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition />
-                                                    <RowDefinition />
-                                                </Grid.RowDefinitions>
-
-                                                <Label Content="Min"
-                                                       Grid.Row="0"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-
-                                                <Label Content="{Binding bataryVolt}"
-                                                       Name="uc_label_min"
-                                                       Grid.Row="1"
-                                                       HorizontalContentAlignment="Left"
-                                                       VerticalContentAlignment="Center"
-                                                       FontSize="18" />
-                                            </Grid>
-                                        </Border>
-                                    </Grid>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </Grid>-->
+                        
                     </Grid>
 
                 </Border>
@@ -1442,7 +1280,7 @@
                                        FontSize="15"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"></Label>
-                                <Label Content="00000000"
+                                <Label Content="{Binding statusString}"
                                        Grid.Row="1"
                                        Grid.Column="1"
                                        FontSize="15"
@@ -1455,7 +1293,7 @@
                                        FontSize="15"
                                        HorizontalAlignment="Left"
                                        VerticalAlignment="Center"></Label>
-                                <Label Content="00000000"
+                                <Label Content="{Binding error}"
                                        Grid.Row="2"
                                        Grid.Column="1"
                                        FontSize="15"

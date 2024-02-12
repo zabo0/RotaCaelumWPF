@@ -14,6 +14,16 @@ using System.Text.RegularExpressions;
 using CheckBox = System.Windows.Controls.CheckBox;
 using MessageBox = System.Windows.MessageBox;
 using Button = System.Windows.Controls.Button;
+using Mapsui.Widgets;
+using Mapsui.Widgets.ScaleBar;
+using Mapsui;
+using Mapsui.Extensions;
+using Mapsui.Tiling;
+using Mapsui.Widgets.Zoom;
+using Mapsui.Projections;
+using Mapsui.Layers;
+using Mapsui.Providers;
+using Mapsui.Styles;
 
 namespace RotaCaelum
 {
@@ -50,7 +60,27 @@ namespace RotaCaelum
 
             textBox_saveLocation.Text = settings.SaveDataFilePath;
 
+            var map = new Map
+            {
+                CRS = "EPSG:3857"
+            };
+
+            map.Layers.Add(OpenStreetMap.CreateTileLayer());
+            map.Widgets.Add(new ScaleBarWidget(map) { TextAlignment = Alignment.Center, HorizontalAlignment = Mapsui.Widgets.HorizontalAlignment.Center, VerticalAlignment = Mapsui.Widgets.VerticalAlignment.Top });
+            map.Widgets.Add(new ZoomInOutWidget { });
+
+            mapControl.Map = map;
         }
+
+
+
+
+
+
+
+
+
+
 
         private void expandChart(object sender, RoutedEventArgs e)
         {
@@ -106,6 +136,8 @@ namespace RotaCaelum
 
         private void StartButtonClicked(object sender, RoutedEventArgs e)
         {
+            
+
             if (button_start.Content.Equals("START"))
             {
                 if(isDeploymentConfigsAplied)
@@ -114,6 +146,8 @@ namespace RotaCaelum
                     {
                         dataFileWriter.startNewSession(isDeploymentConfigsAplied);
                         dataFileWriter.writeDataInfo("start");
+
+                        viewModelTelemetry.clearCharts();
                         viewModelTelemetry.startReadingPort();
                     }
                     catch(Exception ex)
@@ -141,6 +175,8 @@ namespace RotaCaelum
                         {
                             dataFileWriter.startNewSession(isDeploymentConfigsAplied);
                             dataFileWriter.writeDataInfo("start");
+
+                            viewModelTelemetry.clearCharts();
                             viewModelTelemetry.startReadingPort();
                         }
                         catch (Exception ex)
@@ -622,6 +658,27 @@ namespace RotaCaelum
                 refreshComPortsConfigs();
             }
         }
+
+
+
+        //private void mapView_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+        //    // choose your provider here
+        //    mapView.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+        //    mapView.MinZoom = 2;
+        //    mapView.MaxZoom = 17;
+        //    // whole world zoom
+        //    mapView.Zoom = 14;
+        //    // lets the map use the mousewheel to zoom
+        //    mapView.MouseWheelZoomType = GMap.NET.MouseWheelZoomType.MousePositionAndCenter;
+        //    // lets the user drag the map
+        //    mapView.CanDragMap = true;
+        //    // lets the user drag the map with the left mouse button
+        //    mapView.DragButton = MouseButton.Left;
+
+        //    mapView.Position = new PointLatLng(39.902972, 32.852933);
+        //}
     }
 
 

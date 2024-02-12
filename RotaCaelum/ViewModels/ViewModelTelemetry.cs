@@ -13,6 +13,8 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 using System.IO.Ports;
+using System.Collections;
+using BruTile.Wms;
 
 namespace RotaCaelum.ViewModels
 {
@@ -42,6 +44,7 @@ namespace RotaCaelum.ViewModels
 
         private ModelTelemetry telemetry;
         private ModelChartSeriesCollections collections;
+        private ModelStatus modelStatus;
 
         private readonly BackgroundWorker comPortWorker = new BackgroundWorker();
         private SerialComminication serialComminication = SerialComminication.Instance;
@@ -55,7 +58,7 @@ namespace RotaCaelum.ViewModels
             InitializeLineSeries();
             telemetry = new ModelTelemetry();
             collections = new ModelChartSeriesCollections();
-
+            modelStatus = new ModelStatus();
             serialComminication.serialComPort.DataReceived += SerialComPort_DataReceived;
 
             srCollectionPressure = new SeriesCollection
@@ -337,6 +340,55 @@ namespace RotaCaelum.ViewModels
             set { telemetry.checkSum = value; OnPropertyChanged(nameof(checkSum)); }
         }
 
+
+        public byte ready
+        {
+            get => modelStatus.ready;
+            set { modelStatus.ready = value; OnPropertyChanged(nameof(ready)); }
+        }
+        public byte takeOff
+        {
+            get => modelStatus.takeOff;
+            set { modelStatus.takeOff = value; OnPropertyChanged(nameof(takeOff)); }
+        }
+        public byte ascent
+        {
+            get => modelStatus.ascent;
+            set { modelStatus.ascent = value; OnPropertyChanged(nameof(ascent)); }
+        }
+        public byte firstDeploy
+        {
+            get => modelStatus.firstDeploy;
+            set { modelStatus.firstDeploy = value; OnPropertyChanged(nameof(firstDeploy)); }
+        }
+        public byte drag
+        {
+            get => modelStatus.drag;
+            set { modelStatus.drag = value; OnPropertyChanged(nameof(drag)); }
+        }
+        public byte secondDeploy
+        {
+            get => modelStatus.secondDeploy;
+            set { modelStatus.secondDeploy = value; OnPropertyChanged(nameof(secondDeploy)); }
+        }
+        public byte descent
+        {
+            get => modelStatus.descent;
+            set { modelStatus.descent = value; OnPropertyChanged(nameof(descent)); }
+        }
+        public byte landed
+        {
+            get => modelStatus.landed;
+            set { modelStatus.landed = value; OnPropertyChanged(nameof(landed)); }
+        }
+
+        private string _statusString;
+        public string statusString 
+        {
+            get { return _statusString; }
+            set { _statusString = value; OnPropertyChanged(nameof(statusString)); }
+        }
+
         public SeriesCollection srCollectionPressure
         {
             get => collections.srCollectionPressure;
@@ -435,6 +487,7 @@ namespace RotaCaelum.ViewModels
                     packageNo = BitConverter.ToUInt16(dataBuffer, 1);
                     time = getFloat(dataBuffer, 3);
                     status = dataBuffer[7];
+                    statusString = Convert.ToString(status, 2).PadLeft(8, '0'); 
                     error = dataBuffer[8];
                     pressure = getFloat(dataBuffer, 9);
                     altitude = getFloat(dataBuffer, 13);
@@ -452,6 +505,9 @@ namespace RotaCaelum.ViewModels
                     lon_gps = getFloat(dataBuffer, 61);
                     checkSum = dataBuffer[65];
 
+                    
+
+                    //ready = statusArray[0];
 
                     //string[] dataPackageForDataFile = new string[21];
                     //dataPackageForDataFile[0] = index.ToString();
@@ -506,7 +562,7 @@ namespace RotaCaelum.ViewModels
                     chartValuesGyro_Z.Add(telemetry.z_gyro);
                 }
             }
-            catch(Exception ex)
+            catch(System.Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -608,6 +664,20 @@ namespace RotaCaelum.ViewModels
                 check_sum += package[i];
             }
             return Convert.ToByte(check_sum % 256);
+        }
+
+        public void clearCharts()
+        {
+            chartValuesPressure.Clear(); 
+            chartValuesAltitude.Clear();
+            chartValuesVelocity.Clear();
+            chartValuesTemperature.Clear();
+            chartValuesGyro_X.Clear();
+            chartValuesGyro_Y.Clear();
+            chartValuesGyro_Z.Clear();
+            chartValuesAccel_X.Clear();
+            chartValuesAccel_Y.Clear();
+            chartValuesAccel_Z.Clear();
         }
     }
 
