@@ -341,46 +341,6 @@ namespace RotaCaelum.ViewModels
         }
 
 
-        public byte ready
-        {
-            get => modelStatus.ready;
-            set { modelStatus.ready = value; OnPropertyChanged(nameof(ready)); }
-        }
-        public byte takeOff
-        {
-            get => modelStatus.takeOff;
-            set { modelStatus.takeOff = value; OnPropertyChanged(nameof(takeOff)); }
-        }
-        public byte ascent
-        {
-            get => modelStatus.ascent;
-            set { modelStatus.ascent = value; OnPropertyChanged(nameof(ascent)); }
-        }
-        public byte firstDeploy
-        {
-            get => modelStatus.firstDeploy;
-            set { modelStatus.firstDeploy = value; OnPropertyChanged(nameof(firstDeploy)); }
-        }
-        public byte drag
-        {
-            get => modelStatus.drag;
-            set { modelStatus.drag = value; OnPropertyChanged(nameof(drag)); }
-        }
-        public byte secondDeploy
-        {
-            get => modelStatus.secondDeploy;
-            set { modelStatus.secondDeploy = value; OnPropertyChanged(nameof(secondDeploy)); }
-        }
-        public byte descent
-        {
-            get => modelStatus.descent;
-            set { modelStatus.descent = value; OnPropertyChanged(nameof(descent)); }
-        }
-        public byte landed
-        {
-            get => modelStatus.landed;
-            set { modelStatus.landed = value; OnPropertyChanged(nameof(landed)); }
-        }
 
         private string _statusString;
         public string statusString 
@@ -388,6 +348,10 @@ namespace RotaCaelum.ViewModels
             get { return _statusString; }
             set { _statusString = value; OnPropertyChanged(nameof(statusString)); }
         }
+
+
+
+
 
         public SeriesCollection srCollectionPressure
         {
@@ -505,34 +469,31 @@ namespace RotaCaelum.ViewModels
                     lon_gps = getFloat(dataBuffer, 61);
                     checkSum = dataBuffer[65];
 
-                    
 
-                    //ready = statusArray[0];
+                    string[] dataPackageForDataFile = new string[21];
+                    dataPackageForDataFile[0] = index.ToString();
+                    dataPackageForDataFile[1] = serialNo.ToString();
+                    dataPackageForDataFile[2] = packageNo.ToString();
+                    dataPackageForDataFile[3] = time.ToString();
+                    dataPackageForDataFile[4] = status.ToString();
+                    dataPackageForDataFile[5] = error.ToString();
+                    dataPackageForDataFile[6] = pressure.ToString();
+                    dataPackageForDataFile[7] = altitude.ToString();
+                    dataPackageForDataFile[8] = temperature.ToString();
+                    dataPackageForDataFile[9] = bataryVolt.ToString();
+                    dataPackageForDataFile[10] = velocity.ToString();
+                    dataPackageForDataFile[11] = x_accel.ToString();
+                    dataPackageForDataFile[12] = y_accel.ToString();
+                    dataPackageForDataFile[13] = z_accel.ToString();
+                    dataPackageForDataFile[14] = x_gyro.ToString();
+                    dataPackageForDataFile[15] = y_gyro.ToString();
+                    dataPackageForDataFile[16] = z_gyro.ToString();
+                    dataPackageForDataFile[17] = alt_gps.ToString();
+                    dataPackageForDataFile[18] = lat_gps.ToString();
+                    dataPackageForDataFile[19] = lon_gps.ToString();
+                    dataPackageForDataFile[20] = checkSum.ToString();
 
-                    //string[] dataPackageForDataFile = new string[21];
-                    //dataPackageForDataFile[0] = index.ToString();
-                    //dataPackageForDataFile[1] = serialNo.ToString();
-                    //dataPackageForDataFile[2] = packageNo.ToString();
-                    //dataPackageForDataFile[3] = time.ToString();
-                    //dataPackageForDataFile[4] = status.ToString();
-                    //dataPackageForDataFile[5] = error.ToString();
-                    //dataPackageForDataFile[6] = pressure.ToString();
-                    //dataPackageForDataFile[7] = altitude.ToString();
-                    //dataPackageForDataFile[8] = temperature.ToString();
-                    //dataPackageForDataFile[9] = bataryVolt.ToString();
-                    //dataPackageForDataFile[10] = velocity.ToString();
-                    //dataPackageForDataFile[11] = x_accel.ToString();
-                    //dataPackageForDataFile[12] = y_accel.ToString();
-                    //dataPackageForDataFile[13] = z_accel.ToString();
-                    //dataPackageForDataFile[14] = x_gyro.ToString();
-                    //dataPackageForDataFile[15] = y_gyro.ToString();
-                    //dataPackageForDataFile[16] = z_gyro.ToString();
-                    //dataPackageForDataFile[17] = alt_gps.ToString();
-                    //dataPackageForDataFile[18] = lat_gps.ToString();
-                    //dataPackageForDataFile[19] = lon_gps.ToString();
-                    //dataPackageForDataFile[20] = checkSum.ToString();
-                    
-                    //dataFileWriter.writeData(dataPackageForDataFile);
+                    dataFileWriter.writeData(dataPackageForDataFile);
 
                     if (index >= 500)
                     {

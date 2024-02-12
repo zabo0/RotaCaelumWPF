@@ -461,7 +461,7 @@ namespace RotaCaelum
         private void openComportButton_clicked(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
-            if(button.Content.Equals("Open Port"))
+            if(button.Content.Equals("Open Port") && comboBox_comPort.Text != "")
             {
                 if (comboBox_comPort.SelectedItem.ToString() != null)
                 {

@@ -1145,58 +1145,68 @@
 
                                 <Label Content="Ready"
                                        Grid.Row="0"
+                                       Name="status_0"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Background="{Binding StatusColor[0]}"
+                                       
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Take Off"
                                        Grid.Row="1"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_1"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Ascent"
                                        Grid.Row="2"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_2"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="First Deploy"
                                        Grid.Row="3"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_3"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Drag"
                                        Grid.Row="4"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_4"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Second Deploy"
                                        Grid.Row="5"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_5"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Descent"
                                        Grid.Row="6"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_6"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
 
                                 <Label Content="Landed"
                                        Grid.Row="7"
                                        Grid.Column="0"
                                        FontSize="15"
-                                       HorizontalAlignment="Left"
+                                       Name="status_7"
+                                       HorizontalAlignment="Stretch"
                                        VerticalAlignment="Center"></Label>
                             </Grid>
                         </ScrollViewer>
