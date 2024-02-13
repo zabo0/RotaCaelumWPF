@@ -32,18 +32,18 @@ namespace RotaCaelum.Utils
             }
         }
 
-        public void createNewDataFile() {
+        public void createNewDataFile(string fileName) {
             session++;
-            fileNameInfo = "" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") +"_session_" + session + "_info.txt";
+            fileNameInfo = "" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") +"_session" + session + "_" + fileName + "_info.txt";
             filePathInfo = fileRootPath + fileNameInfo;
 
-            fileNamePort = "" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_session_" + session + "_port.txt";
+            fileNamePort = "" + DateTime.Now.ToString("yyyy.MM.dd_HH.mm.ss") + "_session" + session + "_" + fileName + "_port.txt";
             filePathPort = fileRootPath + fileNamePort;
         }
 
-        public void startNewSession(bool isDefaultDeploymentConfigs)
+        public void startNewSession(string sessionName, bool isDefaultDeploymentConfigs)
         {
-            createNewDataFile();
+            createNewDataFile(sessionName);
 
 
             string configs_1;

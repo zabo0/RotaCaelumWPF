@@ -174,34 +174,31 @@
 
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="28*" />
-                                <ColumnDefinition Width="70*" />
-                                <ColumnDefinition Width="131*" />
-                                <ColumnDefinition Width="33*" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="33" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="2*" />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Column="0"
+                            <!--<Label Grid.Column="0"
                                    Grid.Row="0"
                                    Padding="0"
-                                   Content="Save Location"
+                                   Content="Location"
                                    FontSize="14"
                                    VerticalContentAlignment="Center"
-                                   Grid.ColumnSpan="2" />
+                                   Grid.ColumnSpan="2" />-->
 
-                            <TextBox Grid.Column="1"
-                                     Margin="70,4,0,4"
+                            <TextBox Grid.Column="0"
+                                     Margin="0,4,0,4"
                                      IsReadOnly="True"
                                      Name="textBox_saveLocation"
                                      Grid.Row="0"
                                      Text="Select location"
                                      MaxLines="1"
                                      VerticalContentAlignment="Center"
-                                     TextChanged="saveDataFilePathTextChanged"
-                                     Grid.ColumnSpan="2" />
+                                     TextChanged="saveDataFilePathTextChanged" />
 
                             <Button Grid.Column="3"
                                     Margin="5,5,5,5"
@@ -210,7 +207,6 @@
                                     Click="saveLocation_Clicked" />
 
                             <CheckBox Grid.Column="0"
-                                      Grid.ColumnSpan="2"
                                       Name="checkBox_dontSaveData"
                                       Grid.Row="1"
                                       Content="Don't Save Data"

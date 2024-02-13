@@ -57,7 +57,6 @@ namespace RotaCaelum
             comPortWorker.RunWorkerCompleted += ComPortWorker_RunWorkerCompleted;
             comPortWorker.WorkerReportsProgress = true;
 
-
             textBox_saveLocation.Text = settings.SaveDataFilePath;
 
             var map = new Map
@@ -137,32 +136,39 @@ namespace RotaCaelum
         private void StartButtonClicked(object sender, RoutedEventArgs e)
         {
             
-
             if (button_start.Content.Equals("START"))
             {
                 if(isDeploymentConfigsAplied)
                 {
                     try
                     {
-                        dataFileWriter.startNewSession(isDeploymentConfigsAplied);
-                        dataFileWriter.writeDataInfo("start");
+                        var dialog = new Dialog();
+                        if (dialog.ShowDialog() == true)
+                        {
+                            dataFileWriter.startNewSession(dialog.ResponseText, isDeploymentConfigsAplied);
+                            dataFileWriter.writeDataInfo("start");
 
-                        viewModelTelemetry.clearCharts();
-                        viewModelTelemetry.startReadingPort();
+                            viewModelTelemetry.clearCharts();
+                            viewModelTelemetry.startReadingPort();
+
+                            button_start.Content = "FINISH";
+                            button_start.Background = Brushes.Red;
+
+                            groupBox_saveData.IsEnabled = false;
+                            groupBox_firstDeploy.IsEnabled = false;
+                            groupBox_secondDeploy.IsEnabled = false;
+                            groupBox_settings.IsEnabled = false;
+                            border_configs.IsEnabled = false;
+                        }
+                        else
+                        {
+                            return;
+                        }
                     }
                     catch(Exception ex)
                     {
                         MessageBox.Show(ex.ToString());
                     }
-
-                    button_start.Content = "FINISH";
-                    button_start.Background = Brushes.Red;
-
-                    groupBox_saveData.IsEnabled = false;
-                    groupBox_firstDeploy.IsEnabled = false;
-                    groupBox_secondDeploy.IsEnabled = false;
-                    groupBox_settings.IsEnabled = false;
-                    border_configs.IsEnabled = false;
                 }
                 else
                 {
@@ -173,25 +179,33 @@ namespace RotaCaelum
                         //goWithDefaultConfigs
                         try
                         {
-                            dataFileWriter.startNewSession(isDeploymentConfigsAplied);
-                            dataFileWriter.writeDataInfo("start");
+                            var dialog = new Dialog();
+                            if(dialog.ShowDialog() == true)
+                            {
+                                dataFileWriter.startNewSession(dialog.ResponseText, isDeploymentConfigsAplied);
+                                dataFileWriter.writeDataInfo("start");
 
-                            viewModelTelemetry.clearCharts();
-                            viewModelTelemetry.startReadingPort();
+                                viewModelTelemetry.clearCharts();
+                                viewModelTelemetry.startReadingPort();
+
+                                button_start.Content = "FINISH";
+                                button_start.Background = Brushes.Red;
+
+                                groupBox_saveData.IsEnabled = false;
+                                groupBox_firstDeploy.IsEnabled = false;
+                                groupBox_secondDeploy.IsEnabled = false;
+                                groupBox_settings.IsEnabled = false;
+                                border_configs.IsEnabled = false;
+                            }
+                            else
+                            {
+                                return;
+                            }
                         }
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
                         }
-
-                        button_start.Content = "FINISH";
-                        button_start.Background = Brushes.Red;
-
-                        groupBox_saveData.IsEnabled = false;
-                        groupBox_firstDeploy.IsEnabled = false;
-                        groupBox_secondDeploy.IsEnabled = false;
-                        groupBox_settings.IsEnabled = false;
-                        border_configs.IsEnabled = false;
                     }
                 }
             }
@@ -231,6 +245,10 @@ namespace RotaCaelum
 
         private void saveLocation_Clicked(object sender, RoutedEventArgs e)
         {
+            
+            //comPortWorker.CancelAsync();
+            groupBox_comPortConfigs.IsEnabled = false;
+
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Select Folder";
 
@@ -243,7 +261,7 @@ namespace RotaCaelum
                 textBox_saveLocation.Text = fbd.SelectedPath;
 
                 groupBox_comPortConfigs.IsEnabled = true;
-                refreshComPortsConfigs();
+                //refreshComPortsConfigs();
             }
         }
 
@@ -650,8 +668,6 @@ namespace RotaCaelum
 
         private void saveDataFilePathTextChanged(object sender, TextChangedEventArgs e)
         {
-
-
             if (textBox_saveLocation.Text != "Select location")
             {
                 groupBox_comPortConfigs.IsEnabled = true;
