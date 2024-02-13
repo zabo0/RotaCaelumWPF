@@ -495,7 +495,7 @@ namespace RotaCaelum.ViewModels
 
                     dataFileWriter.writeData(dataPackageForDataFile);
 
-                    if (index >= 500)
+                    if (index >= 300)
                     {
                         chartValuesPressure.RemoveAt(0);
                         chartValuesAltitude.RemoveAt(0);
@@ -629,6 +629,8 @@ namespace RotaCaelum.ViewModels
 
         public void clearCharts()
         {
+            index = 0;
+
             chartValuesPressure.Clear(); 
             chartValuesAltitude.Clear();
             chartValuesVelocity.Clear();

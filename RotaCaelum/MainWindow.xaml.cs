@@ -659,6 +659,12 @@ namespace RotaCaelum
             }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            VisualizeData visualizeData = new VisualizeData();
+            visualizeData.Show();
+        }
+
 
 
         //private void mapView_Loaded(object sender, RoutedEventArgs e)

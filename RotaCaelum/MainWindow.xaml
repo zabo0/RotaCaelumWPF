@@ -625,7 +625,8 @@
                                     Content="Start Simulation Mode"
                                     Grid.Row="2"
                                     Margin="0,4,0,0"
-                                    FontSize="12" />
+                                    FontSize="12"
+                                    Click="Button_Click" />
                         </Grid>
 
 
